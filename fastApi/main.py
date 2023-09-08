@@ -6,6 +6,9 @@ from loguru import logger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# ml features
+from ..ml.tone import tone
+
 # Initial code
 # Database connection setup
 
@@ -13,7 +16,7 @@ conn = 0
 cur = 0
 
 logger.debug("Waiting for DB service Up...")
-time.sleep(5)
+time.sleep(10)
 
 try:     
     HOST=os.environ.get("DB_HOST")
@@ -54,6 +57,7 @@ app.add_middleware(
 def root():
     return {"message": "Hello World"}
 
+# Tables list output with question for FRONTEND COMBOBOX
 @app.get("/tableslist")
 def tableslist():
     cur.execute("""SELECT * FROM tables_list""")
@@ -70,3 +74,6 @@ def tableslist():
 
     return result
 
+@app.post("/")
+def root():
+    return {"message": "Hello World"}
