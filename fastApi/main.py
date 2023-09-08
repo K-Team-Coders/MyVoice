@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 # ml features
 from ml.tone import tone
+from ml.t9 import t9
 
 # Initial code
 # Database connection setup
@@ -84,12 +85,22 @@ class Answer(BaseModel):
 @app.post("/answer")
 def answerProcessing(item: Answer):
     logger.debug(f"Answer is --- {item.usertext}")
-    scores = tone(item.usertext)
-    return JSONResponse(content=scores)
 
-# Json API data inputs 
+    scores = tone(item.usertext)
+    t9_correction = t9(item.usertext)
+
+    result = {
+        "positive": scores['pos'],
+        "neutral": scores['neu'],
+        "negative": scores['neg'],
+        "t9": t9_correction["t9_corretion"]
+    }
+
+    return JSONResponse(content=result)
+
+# JSON API data inputs 
 class Files(BaseModel):
-    files: file
+    files: list
 
 # JSON files processing (filtering --> database)
 @app.post("/files")
