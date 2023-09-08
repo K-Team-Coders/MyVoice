@@ -6,6 +6,9 @@ from loguru import logger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Initial code
+# Database connection setup
+
 conn = 0
 cur = 0
 
@@ -51,4 +54,19 @@ app.add_middleware(
 def root():
     return {"message": "Hello World"}
 
+@app.get("/tableslist")
+def tableslist():
+    cur.execute("""SELECT * FROM tables_list""")
+    data = cur.fetchall()
+    result = []
+    for index, subdata in enumerate(data):
+        table_id = data[0]
+        table_head_question = data[1]
+
+        result.append({
+            'table_id': table_id,
+            'table_head_question': table_head_question
+        })
+
+    return result
 
