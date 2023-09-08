@@ -1,33 +1,28 @@
 <template>
-    <div>
+    <div >
       <span class="Sphere"></span>
-    
+
     </div>
    
   </template>
   
   <script>
-  import VueWordCloud from 'vuewordcloud';
   import TagCloud from 'TagCloud'
   export default {
     components:  [TagCloud],
     mounted(){
       const Texts = [
-              'HTML', 'CSS', 'JAVASCRIPT',
-              'SWIFT', 'MONGOOSE', 'REACT',
-              'PYTHON', 'SASS',
-              'DJANGO', 'NODEJS', 'MONGODB',
-              'EXPRESS', 'MYSQL', 'JQUERY', 'JAVA'
+             'Жора', 'Еда', 'По идее один кластер??', 'Шавуха'
           ];
   
-          var tagCloud = TagCloud('.Sphere', Texts, {
+          let tagCloud = TagCloud('.Sphere', Texts, {
   
               // Sphere radius in px
               radius: 230,
   
               // animation speed
               // slow, normal, fast
-              maxSpeed: 'normal',
+              maxSpeed: 'fast',
               initSpeed: 'fast',
   
               // Rolling direction [0 (top) , 90 (left), 135 (right-bottom)] 
@@ -39,8 +34,15 @@
           });
   
           // Giving color to each text in sphere
-          var color = '#FF5733 ';
+          let color = '#544adde1';
+
           document.querySelector('.Sphere').style.color = color;
+          let rootEl = document.querySelector('.tagcloud');
+            rootEl.addEventListener('click', function clickEventHandler(e) {
+            if (e.target.className === 'tagcloud--item') {
+            
+    }
+});
     }
   }
   </script>
@@ -50,7 +52,7 @@
    /*     Importing Google fonts    */
    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
   
-  body {
+  .backbody {
     background-color: #000;
   }
   
@@ -61,12 +63,12 @@
     left: 32%;
     font-weight: bold;
     letter-spacing: 1px;
-    font-family: 'Bebas Neue', cursive;
+    font-family: 'Roboto', italic;
     font-size: 20px;
   }
   
   /* Change color of each text in sphere on hover   */
   .tagcloud--item:hover {
-    color: #FFC300 ;
+    color: #1a128fe1 ;
   }
   </style>
