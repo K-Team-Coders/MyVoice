@@ -6,4 +6,5 @@ from deep_translator import GoogleTranslator
 def tone(txt):
     analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(GoogleTranslator(source='auto', target='en').translate(txt))
-    return print(scores)
+    print(scores)
+    return scores 

@@ -3,11 +3,13 @@ import time
 
 import psycopg2
 from loguru import logger
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, File
+from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 # ml features
-from ..ml.tone import tone
+from ml.tone import tone
 
 # Initial code
 # Database connection setup
@@ -74,6 +76,23 @@ def tableslist():
 
     return result
 
-@app.post("/")
-def root():
-    return {"message": "Hello World"}
+# Answer model for POST
+class Answer(BaseModel):
+    usertext: str
+
+# Single answer processing (tone (+), censor (-), t9 (-), cluster! (-))
+@app.post("/answer")
+def answerProcessing(item: Answer):
+    logger.debug(f"Answer is --- {item.usertext}")
+    scores = tone(item.usertext)
+    return JSONResponse(content=scores)
+
+# Json API data inputs 
+class Files(BaseModel):
+    files: file
+
+# JSON files processing (filtering --> database)
+@app.post("/files")
+def filesProcessing(item: Files):
+    logger.debug(item.files)
+    return Response(status_code=201)
