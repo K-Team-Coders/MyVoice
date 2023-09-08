@@ -1,9 +1,9 @@
 import os
 import time
 
-from loguru import logger
 import psycopg2
-from fastapi import FastAPI, Response
+from loguru import logger
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 conn = 0
@@ -47,7 +47,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/home/")
-def home():
-    pass
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
+
 

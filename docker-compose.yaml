@@ -20,12 +20,12 @@ services:
     build: 
       context: ./fastApi
     ports:
-      - 8081:8081
+      - 8082:8082
     expose:
-      - 8081
+      - 8082
     depends_on:
       - db
-    command: ['uvicorn', 'main:app', '--host=localhost', '--port=8081', '--reload']
+    command: ['uvicorn', 'main:app', '--host=0.0.0.0', '--port=8082', '--reload']
 
   db:
     container_name: db
