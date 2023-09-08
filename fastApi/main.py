@@ -3,14 +3,22 @@ import time
 
 import psycopg2
 from loguru import logger
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, File
+from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+# ml features
+from ml.tone import tone
+
+# Initial code
+# Database connection setup
 
 conn = 0
 cur = 0
 
 logger.debug("Waiting for DB service Up...")
-time.sleep(5)
+time.sleep(10)
 
 try:     
     HOST=os.environ.get("DB_HOST")
@@ -51,4 +59,40 @@ app.add_middleware(
 def root():
     return {"message": "Hello World"}
 
+# Tables list output with question for FRONTEND COMBOBOX
+@app.get("/tableslist")
+def tableslist():
+    cur.execute("""SELECT * FROM tables_list""")
+    data = cur.fetchall()
+    result = []
+    for index, subdata in enumerate(data):
+        table_id = data[0]
+        table_head_question = data[1]
 
+        result.append({
+            'table_id': table_id,
+            'table_head_question': table_head_question
+        })
+
+    return result
+
+# Answer model for POST
+class Answer(BaseModel):
+    usertext: str
+
+# Single answer processing (tone (+), censor (-), t9 (-), cluster! (-))
+@app.post("/answer")
+def answerProcessing(item: Answer):
+    logger.debug(f"Answer is --- {item.usertext}")
+    scores = tone(item.usertext)
+    return JSONResponse(content=scores)
+
+# Json API data inputs 
+class Files(BaseModel):
+    files: file
+
+# JSON files processing (filtering --> database)
+@app.post("/files")
+def filesProcessing(item: Files):
+    logger.debug(item.files)
+    return Response(status_code=201)

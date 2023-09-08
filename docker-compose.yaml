@@ -29,12 +29,10 @@ services:
 
   db:
     container_name: db
-    image: postgres
-    restart: always
     env_file:
       - ./DB.env
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    build: ./database
+    restart: always
     ports:
       - 5432:5432
     expose:
