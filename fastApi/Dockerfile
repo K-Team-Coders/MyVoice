@@ -1,10 +1,11 @@
-FROM python:3.11-alpine
+FROM python:3.10-alpine
 
 COPY ./requirements.txt .
+
+RUN [ "pip", "install", "--upgrade", "pip"]
 
 RUN [ "pip", "install", "-r", "requirements.txt"]
 
 COPY . .
 
-EXPOSE 8081
-
+EXPOSE 8082
