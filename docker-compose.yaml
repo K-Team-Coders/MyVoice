@@ -25,16 +25,14 @@ services:
       - 8081
     depends_on:
       - db
-    command: ['uvicorn', 'main:app', '--host=127.0.0.1', '--port=8081']
+    command: ['uvicorn', 'main:app', '--host=localhost', '--port=8081', '--reload']
 
   db:
     container_name: db
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_USER=myvoice_user
-      - POSTGRES_PASSWORD=myvoice_user_pass
-      - POSTGRES_DB=myvoice_db
+    env_file:
+      - ./DB.env
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
