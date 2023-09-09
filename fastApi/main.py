@@ -28,7 +28,7 @@ conn = 0
 cur = 0
 
 logger.debug("Waiting for DB service Up...")
-time.sleep(20)
+time.sleep(5)
 
 try:     
     HOST=os.environ.get("DB_HOST")
@@ -160,7 +160,7 @@ def filesProcessing(file: UploadFile = File(...)):
         # Create new relation in DB
         cur.execute("""
                     CREATE TABLE "%s" 
-                    (answer text, count integer, positive real, neutral real, negative real, t9 text, PRIMARY KEY ('answer', 'count', 'positive', 'neutral', 'negative', 't9')));
+                    (answer text, count integer, positive real, neutral real, negative real, t9 text, PRIMARY KEY (answer, count, positive, neutral, negative, t9));
                     """, (id_, ))
         conn.commit()
 
@@ -168,22 +168,33 @@ def filesProcessing(file: UploadFile = File(...)):
             answer = str(subdata["answer"])
             count = subdata["count"]
             
+            logger.debug(answer)
+
             scores = tone(answer)
             t9_correction = t9(answer)
 
             positive = scores['pos']
             neutral =  scores['neu']
             negative = scores['neg']
-            t9 = t9_correction["t9_corretion"]
+            t9_text = t9_correction["t9_corretion"]
             
+            try:
             # Add individual answer to new table
-            cur.execute("""
-                        INSERT INTO "%s" 
-                            (answer, count, positive, neutral, negative, t9)
-                        VALUES
-                            (%s, %s, %s, %s, %s, %s)
-                        """, (id_, answer, count, positive, neutral, negative, t9))
-            conn.commit()
+                cur.execute("""
+                            INSERT INTO "%s" 
+                                (answer, count, positive, neutral, negative, t9)
+                            VALUES
+                                (%s, %s, %s, %s, %s, %s)
+                            """, (id_, answer, count, positive, neutral, negative, t9_text))
+                conn.commit()
+            except psycopg2.errors.UniqueViolation:
+                conn.rollback()
+                cur.execute("""
+                            UPDATE "%s" 
+                            SET "count" = %s
+                            WHERE "answer" = %s
+                            """, (id_, count+1, answer)) 
+                conn.commit()
 
     # Я должен вернуть ему список всех айди и вопросов
     return JSONResponse(content=getTables(), status_code=201)
