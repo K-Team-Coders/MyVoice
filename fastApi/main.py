@@ -117,14 +117,6 @@ def tabledetailview(id_: str):
 
         for index, subdata in enumerate(data):
             logger.debug(subdata)
-            # logger.debug(subdata[1])
-            # logger.debug(subdata[2])
-            # logger.debug(subdata[3])
-            # logger.debug(subdata[4])
-            # logger.debug(subdata[5])
-            # logger.debug(subdata[6])
-            # logger.debug(subdata[7])
-            # logger.debug(subdata[8])
             
 
     return JSONResponse({'nothing': 'nothing'})
