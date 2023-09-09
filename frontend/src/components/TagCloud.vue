@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <span class="Sphere"></span>
+    <span class="Sphere cursor-pointer"></span>
   </div>
 </template>
 
@@ -9,7 +9,56 @@ import TagCloud from "TagCloud";
 export default {
   components: [TagCloud],
   mounted() {
-    const Texts = ["Жора", "Еда", "По идее один кластер??", "Шавуха"];
+    const Texts = [
+      "Путешествия",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Животные",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Путешествия",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Животные",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Путешествия",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+      "Животные",
+      "Еда",
+      "Лаборатория",
+      "Наука",
+      "Музыка",
+      "Искусство",
+      "Люди",
+    ];
 
     let tagCloud = TagCloud(".Sphere", Texts, {
       // Sphere radius in px
@@ -28,7 +77,7 @@ export default {
     });
 
     // Giving color to each text in sphere
-    let color = "#544adde1";
+    let color = "#5fff";
 
     document.querySelector(".Sphere").style.color = color;
     let rootEl = document.querySelector(".tagcloud");
@@ -51,15 +100,14 @@ export default {
 /* Applying CSS to sphere */
 .tagcloud {
   display: inline-block;
-  left: 30%;
   font-weight: bold;
   letter-spacing: 1px;
   font-family: "Roboto", italic;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 /* Change color of each text in sphere on hover   */
 .tagcloud--item:hover {
-  color: #1a128fe1;
+  color: rgb(255, 255, 255);
 }
 </style>
