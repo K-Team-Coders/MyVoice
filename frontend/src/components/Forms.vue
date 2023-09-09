@@ -25,12 +25,12 @@
           Отправить
         </button>
       </div>
-      <div class="grid grid-cols-4 pt-2 gap-1">
+      <div class="flex pt-2">
         <p
-          class="px-1 text-sm rounded-lg bg-gray-100 text-center border-2 border-blueGod"
+          class="text-sm rounded-lg bg-gray-100 text-center border-2 border-blueGod px-4 hover:bg-blue-600 cursor-pointer hover:text-whitesmoke"
           @click="t9_text_change('Грядет событие')"
         >
-        Грядет событие
+        Грядет 
         </p>
       </div>
       <div class="flex flex-col pt-1">
