@@ -10,6 +10,9 @@
           placeholder="Напишите ваш ответ"
           aria-label="Full name"
         />
+        <div>
+      <small v-if="isTyping">Чел печатает...</small>
+    </div>
         <button
           @click="submitText()"
           class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
@@ -45,8 +48,9 @@ export default {
     },
     debounceStopTyping: debounce(function () {
       this.isTyping = false;
-    }, 100),
+    }, 500),
 
+    text_processing(){},
     submitText() {
       let text = this.text;
       axios

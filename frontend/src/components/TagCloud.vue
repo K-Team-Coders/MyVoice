@@ -1,6 +1,6 @@
 <template>
-  <div class="backbody flex-col rounded-2xl w-full justify-center ml-10">
-    <div class="flex gap-3">
+  <div class="backbody flex flex-col rounded-2xl w-full justify-center">
+    <div class="flex justify-center gap-3">
       <div class="bg-whitesmoke rounded-xl p-4">
         <BarChart />
       </div>

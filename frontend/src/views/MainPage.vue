@@ -27,9 +27,10 @@ export default {
     }
   },
   mounted(){
-  axios.get("http://26.200.185.61:8082/tableslist/").then(response => (this.question_list = response.data));
+  axios.get("http://26.200.185.61:8082/tableslist/").then(response => (this.question_list = response.data.result,
+  console.log(response.data.result)));
 
-  console.log(this.question_list)
+  
 }
 };
 
