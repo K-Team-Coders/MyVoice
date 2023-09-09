@@ -1,18 +1,18 @@
 <template>
   <div class="backbody flex flex-col rounded-2xl w-full justify-center">
-    <div class="2xl:flex flex-row sm:px-40 px-4 gap-4 justify-center">
+    <div class="xl:flex flex-row sm:px-40 px-4 gap-4 justify-center">
       <div
-        class="bg-whitesmoke rounded-xl p-4 lg:max-w-2xl sm:max-w-lg w-full mx-auto"
+        class="bg-whitesmoke rounded-xl p-4 sm:max-w-[450px] w-full mx-auto"
       >
         <BarChart />
       </div>
       <div
-        class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-lg sm:mx-auto"
+        class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-[450px] sm:mx-auto"
       >
         <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
       </div>
       <div
-        class="bg-whitesmoke rounded-xl sm:p-4 p-10 lg:max-w-2xl sm:mx-auto  sm:max-w-lg"
+        class="bg-whitesmoke rounded-xl sm:p-4 p-10 lg:max-w-2xl sm:mx-auto  sm:max-w-[450px]"
       >
         <Doughnut></Doughnut>
       </div>
