@@ -1,6 +1,6 @@
 <template>
   <div class="grid gap-2.5 px-2 grid-cols-4">
-    <div
+    <div @click="card_click(item.table_id)"
       class="bg-gray-50 h-[250px] py-2 font-bold text-idealblack text-start hover:border-blueGod cursor-pointer shadow-inner hover:text-whitesmoke  hover:bg-orangeGod transition ease-in-out delay-50 relative"
       v-for="item in question_list"
       :key="item.table_id"
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   props: {
     question_list: Array,
@@ -27,11 +28,14 @@ export default {
   data() {
     return {
       colors: ["#4487BE", "#FF7E00", "#222"],
+      isLoading: false
     };
   },
   methods: {
-    setRandomColor() {
-      
+    card_click(id) {
+      axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/tabledetailview/${id}`)
+      .then(console.log('Success'))
+      .catch(console.log('Fail'))
     }
   },
 };
