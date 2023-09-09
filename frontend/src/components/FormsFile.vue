@@ -3,10 +3,10 @@
     class="bg-gray-50 max-w-2xl w-full px-4 py-4 rounded-xl border-[1.5px] border-orangeGod shadow-md"
   >
     <form action="">
-      <div class="flex justify-start pt-1">
+      <div class="flex justify-start">
         <input
           v-on:change="handleFilesUpload()"
-          multiple="multiple"
+          
           class="w-full text-sm text-gray-700 border-[0.5px] py-1 px-2 border-orange-500 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
           aria-describedby="file_input_help"
           id="files"
@@ -17,11 +17,11 @@
           .json
         </p>
       </div>
-      <div class="flex justify-end pt-3">
+      <div class="flex justify-end pt-2">
         <button
           @click="submitFiles()"
           type="submit"
-          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2"
         >
           Отправить файл
         </button>
@@ -43,23 +43,23 @@ export default {
   methods: {
 
     submitFiles() {
+      console.log(this.files)
       let formData = new FormData();
       for (var i = 0; i < this.files.length; i++) {
         let file = this.files[i];
-        formData.append("files[" + i + "]", file);
+        formData.append('file', file);
       }
-      let FileArray = [];
-      for (var value of formData.values()) {
-        FileArray.push(value);
-      }
-      console.log(typeof formData.toString());
+      // let FileArray = [];
+      // for (var value of formData.values()) {
+      //   FileArray.push(value);
+      // }
+      console.log(formData);
       axios
         .post(
-          "http://26.200.185.61:8082/files/",
-          {'file': formData.toString() },
+          "http://26.200.185.61:8082/files/", formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data/",
+              'Content-Type': 'multipart/form-data',
             },
           }
         )
