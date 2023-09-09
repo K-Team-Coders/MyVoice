@@ -19,7 +19,7 @@
         </div>
         <button
           @click="submitText()"
-          class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
+          class="flex-shrink-0 bg-orange-600 hover:bg-orange-700 border-orange-600 hover:border-orange-700 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
           type="button"
         >
           Отправить
