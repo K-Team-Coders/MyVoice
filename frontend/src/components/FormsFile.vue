@@ -65,6 +65,7 @@ export default {
         )
         .then(function () {
           console.log("SUCCESS!!");
+          location.reload();
         })
         .catch(function () {
           console.log("FAILURE!!");
