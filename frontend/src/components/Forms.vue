@@ -8,7 +8,7 @@
           <p v-if="isError" class="mr-10">ОШИБКА В ОБРАБОТКЕ</p>
         <div>
           <small v-if="textisProcessing" class="mr-10">Обработка запроса...</small>
-          <small v-if="isTyping" class="mr-10 animate-spin"></small>
+          <small v-if="isTyping" class="mr-10">Пользователь печатает...</small>
         </div>
         <button @click="submitText()"
           class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
@@ -19,8 +19,8 @@
       <div class="grid grid-cols-4 pt-2 gap-1">
 
         <p class="py-0.5 px-1 rounded-xl bg-gray-100 text-center border-2 border-blueGod"
-          @click="t9_text_change(tone.t9)">Исправленный вариант:
-          {{ tone.t9 }}
+          @click="t9_text_change('Бутылка водки')">Исправленный вариант:
+          Бутылка водки
         </p>
       </div>
       <div class="flex flex-col pt-1">
