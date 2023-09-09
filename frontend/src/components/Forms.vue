@@ -60,7 +60,11 @@ export default {
   console.log({"files": formData})
         axios.post( 'http://26.200.185.61:8082/files/',
           {"files": formData},
-          
+          {
+            headers: {
+                'Content-Type': 'multipart/form-data/'
+            }
+          }
         ).then(function(){
           console.log('SUCCESS!!');
         })

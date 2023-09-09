@@ -1,7 +1,7 @@
 <template>
     <div >
-      <span class="Sphere"></span>
-
+      <span ref="text_isOpened" class="Sphere"></span>
+        <h1  v-if="text_isOpened">СОСАААТЬ {{ opened_textID }}</h1>
     </div>
    
   </template>
@@ -10,7 +10,22 @@
   import TagCloud from 'TagCloud'
   export default {
     components:  [TagCloud],
+    data(){
+        return {
+            text_isOpened: false,
+            opened_textID: '',
+        }
+    },
+    methods:{
+        openTag(opened_textID){
+            this.text_isOpened = true
+            this.opened_textID = opened_textID
+            console.log(this.text_isOpened)
+            return this.opened_textID
+        }
+    },
     mounted(){
+        
       const Texts = [
              'Жора', 'Еда', 'По идее один кластер??', 'Шавуха'
           ];
@@ -40,6 +55,13 @@
           let rootEl = document.querySelector('.tagcloud');
             rootEl.addEventListener('click', function clickEventHandler(e) {
             if (e.target.className === 'tagcloud--item') {
+            //  window.open(`https://www.google.com/search?q=${e.target.innerText}`, '_blank');
+            const box = `
+  <div id='box'>
+    <button id='button-1'>Button</button>
+  </div>`;
+
+document.body.innerHTML = box;
             
     }
 });
