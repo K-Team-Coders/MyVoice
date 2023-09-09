@@ -26,10 +26,12 @@ export default {
       question_list: [{id: 1, text: 'Какой у вас размер члена?'}, {id: 2, text: 'Какой у вас размер груди?'}, {id: 3, text: 'Какой рост у Артема?'}]
     }
   },
-//   created(){
-//   axios.get("http://26.200.185.61:8082/tableslist/").then(response => (this.question_list = response.data));
-//   console.log(this.question_list)
-// }
+  mounted(){
+  axios.get("http://26.200.185.61:8082/tableslist/").then(response => (this.question_list = response.data.result,
+  console.log(response.data.result)));
+
+  
+}
 };
 
 
