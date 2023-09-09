@@ -18,7 +18,7 @@ export default {
         datasets: [
           {
             label: 'Уровень тупости',
-            backgroundColor: '#ba4949',
+            backgroundColor: '#FF7E00',
             data: [40, 20, 12]
           }
         ]

@@ -2,14 +2,14 @@
   <body >
     <Header2></Header2>
     <div class="bg-idealblack">
-      <p class="text-whitesmoke text-3xl text-center font-semibold pt-12">
+      <p class="text-whitesmoke text-3xl text-center font-semibold pt-8">
         Пойдем в горы?
       </p>
       <div class="py-10">
         <div class="flex justify-center">
           <Forms></Forms>
         </div>
-        <div class="flex justify-center">
+        <div class="flex justify-center pt-8">
           <TagCloud></TagCloud>
         </div>
       </div>
