@@ -7,7 +7,7 @@
     >
       <div class="flex flex-col mb-auto">
         <p class="ml-3 text-xl">
-          {{ item.id }}
+          {{ item.table_id }}
         </p>
         <p
           class="absolute bottom-[22px] right-[20px] top-auto left-[10px] text-lg"
