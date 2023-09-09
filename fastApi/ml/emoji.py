@@ -11,6 +11,3 @@ def remove_emoji(string):
                            u"\U000024C2-\U0001F251"
                            "]+", flags=re.UNICODE)
     return emoji_pattern.sub(r'', string)
-text = "привет ☺"
-text = remove_emoji(text)
-print(text)
