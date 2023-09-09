@@ -13,3 +13,5 @@ typing-extensions==4.5.0
 uvicorn==0.21.1
 nltk
 deep_translator
+pyspellchecker
+python-multipart

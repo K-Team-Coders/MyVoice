@@ -3,13 +3,14 @@ import time
 
 import psycopg2
 from loguru import logger
-from fastapi import FastAPI, Response, File
+from fastapi import FastAPI, Response, File, UploadFile
 from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # ml features
 from ml.tone import tone
+from ml.t9 import t9
 
 # Initial code
 # Database connection setup
@@ -84,15 +85,25 @@ class Answer(BaseModel):
 @app.post("/answer")
 def answerProcessing(item: Answer):
     logger.debug(f"Answer is --- {item.usertext}")
-    scores = tone(item.usertext)
-    return JSONResponse(content=scores)
 
-# Json API data inputs 
-class Files(BaseModel):
-    files: file
+    scores = tone(item.usertext)
+    t9_correction = t9(item.usertext)
+
+    result = {
+        "positive": scores['pos'],
+        "neutral": scores['neu'],
+        "negative": scores['neg'],
+        "t9": t9_correction["t9_corretion"]
+    }
+
+    logger.success(result)
+
+    return JSONResponse(content=result)
 
 # JSON files processing (filtering --> database)
 @app.post("/files")
-def filesProcessing(item: Files):
-    logger.debug(item.files)
+def filesProcessing(file: UploadFile):
+    logger.debug(file.filename)
+    data = file.file.read()
+    logger.debug(data)
     return Response(status_code=201)
