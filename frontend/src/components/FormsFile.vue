@@ -1,21 +1,29 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-xl">
-    <form class="">
-      <div class="flex items-center border-b border-orangeGod py-2">
+  <div
+    class="bg-gray-50 max-w-2xl w-full px-4 py-4 rounded-xl border-[1.5px] border-orangeGod shadow-md"
+  >
+    <form action="">
+      <div class="flex justify-start">
         <input
-          @input="startTyping()"
-          v-model="text"
-          class="appearance-none bg-transparent border-none w-full text-gray-700 font-semibold mr-3 py-1 px-2 leading-tight focus:outline-none"
-          type="text"
-          placeholder="Напишите ваш ответ"
-          aria-label="Full name"
+          v-on:change="handleFilesUpload()"
+          multiple="multiple"
+          class="w-full text-sm text-gray-700 border-[0.5px] py-1 px-2 border-orange-500 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+          aria-describedby="file_input_help"
+          id="files"
+          ref="files"
+          type="file"
         />
+        <p class="mt-2.5 ml-2 text-sm text-gray-500" id="file_input_help">
+          .json
+        </p>
+      </div>
+      <div class="flex justify-end pt-2">
         <button
-          @click="submitText()"
-          class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
-          type="button"
+          @click="submitFiles()"
+          type="submit"
+          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2"
         >
-          Отправить
+          Отправить файл
         </button>
       </div>
     </form>

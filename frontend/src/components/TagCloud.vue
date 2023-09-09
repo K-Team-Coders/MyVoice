@@ -9,7 +9,7 @@ import TagCloud from "TagCloud";
 export default {
   components: [TagCloud],
   mounted() {
-    const Texts = ["Жора", "Еда", "По идее один кластер??", "Шавуха"];
+    const Texts = ["Жора", "Еда", "По идее один кластер??", "Шавуха", "Много членов воукру"];
 
     let tagCloud = TagCloud(".Sphere", Texts, {
       // Sphere radius in px
@@ -28,7 +28,7 @@ export default {
     });
 
     // Giving color to each text in sphere
-    let color = "#544adde1";
+    let color = "#5fff";
 
     document.querySelector(".Sphere").style.color = color;
     let rootEl = document.querySelector(".tagcloud");
@@ -60,6 +60,6 @@ export default {
 
 /* Change color of each text in sphere on hover   */
 .tagcloud--item:hover {
-  color: #1a128fe1;
+  color: #1f6;
 }
 </style>

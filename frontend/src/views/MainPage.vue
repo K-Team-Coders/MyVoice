@@ -1,18 +1,11 @@
 <template>
   <body class="">
     <Header></Header>
-    <div class="bg-whiteBlue">
-      <div class="font-semibold text-[25.5px] text-center pt-10">
-        <p>Какие идеи для завтрашнего похода в горы?</p>
+    <div class="bg-whiteBlue min-h-[600px]">
+      <div class="flex gap-2 pt-24 justify-center">
+        <FormsFile></FormsFile>
       </div>
-
-      <div class="flex pt-12 px-8 gap-2 justify-center">
-        <Forms></Forms>
-      </div>
-      <div class="px-40 pb-20">
-        <TagCloud></TagCloud>
-      </div>
-      <div class="p-2">
+      <div class="px-24 py-12">
         <QuestionBlog></QuestionBlog>
       </div>
     </div>
@@ -23,11 +16,10 @@
 <script>
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
-import Forms from "@/components/Forms.vue";
-import TagCloud from "@/components/TagCloud.vue";
+import FormsFile from "@/components/FormsFile.vue";
 import QuestionBlog from "@/components/QuestionBlog.vue";
 export default {
-  components: { Header, Footer, TagCloud, Forms, QuestionBlog },
+  components: { Header, Footer, FormsFile, QuestionBlog },
 };
 </script>
 
