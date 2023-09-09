@@ -10,7 +10,7 @@
           {{ item.table_id }}
         </p>
         <p
-          class="absolute bottom-[22px] right-[20px] top-auto left-[10px] text-lg"
+          class="absolute bottom-[22px] right-[20px] top-auto left-[10px] sm:text-lg text-xs"
         >
           {{ item.table_head_question }}
         </p>
