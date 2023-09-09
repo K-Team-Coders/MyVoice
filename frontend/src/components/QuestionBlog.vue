@@ -1,10 +1,15 @@
 <template>
-  <div class="grid gap-2.5 px-4 grid-cols-8 ">
+  <div class="grid gap-2.5 px-2 grid-cols-4">
     <div
-      class="bg-gray-50 border-[2px] border-orangeGod text-xs rounded-2xl py-2 font-bold text-idealblack text-center max-w-96 hover:border-blueGod cursor-pointer shadow-sm"
+      class="bg-gray-50 h-44 py-2 font-bold text-idealblack text-start hover:border-blueGod cursor-pointer shadow-inner hover:bg-gray-400 transition ease-in-out delay-50"
       v-for="item in 20"
     >
-      Lorem ipsum dolor sit amet consectetur
+      <div class="flex flex-col mb-auto">
+        <p class="ml-3 text-xl">
+          {{ item }}
+        </p>
+        <p class="ml-3 text-2xl">Lorem ipsum dolor</p>
+      </div>
     </div>
   </div>
 </template>

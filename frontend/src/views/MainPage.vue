@@ -1,7 +1,7 @@
 <template>
   <body class="">
     <Header></Header>
-    <div class="bg-whiteBlue min-h-[600px]">
+    <div class="bg-idealblack min-h-[700px]">
       <div class="flex gap-2 pt-24 justify-center">
         <FormsFile></FormsFile>
       </div>

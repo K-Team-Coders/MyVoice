@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-xl">
+  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-lg">
     <form class="">
       <div class="flex items-center border-b border-orangeGod py-2">
         <input
