@@ -3,7 +3,7 @@ import time
 
 import psycopg2
 from loguru import logger
-from fastapi import FastAPI, Response, File
+from fastapi import FastAPI, Response, File, UploadFile
 from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -96,14 +96,14 @@ def answerProcessing(item: Answer):
         "t9": t9_correction["t9_corretion"]
     }
 
-    return JSONResponse(content=result)
+    logger.success(result)
 
-# JSON API data inputs 
-class Files(BaseModel):
-    files: list
+    return JSONResponse(content=result)
 
 # JSON files processing (filtering --> database)
 @app.post("/files")
-def filesProcessing(item: Files):
-    logger.debug(item.files)
+def filesProcessing(file: UploadFile):
+    logger.debug(file.filename)
+    data = file.file.read()
+    logger.debug(data)
     return Response(status_code=201)
