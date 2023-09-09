@@ -1,64 +1,51 @@
 <template>
-  <div class="">
-    <span class="Sphere cursor-pointer"></span>
+  <div class="backbody">
+    <p>Положительных: </p>
+    <p>Нейтральных: </p>
+    <p>Отрицательных: </p>
+    <BarChart/>
+    <Doughnut></Doughnut>
+    <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
+
+    <div v-if="isOpened">
+      <p class="bg-whitesmoke text-3xl">Кластер: {{ texts }}</p>
+      <WordCloud />
+    </div>
+
+
   </div>
 </template>
 
 <script>
+
+
+
 import TagCloud from "TagCloud";
+import WordCloud from "@/components/WordCloud.vue"
+import BarChart from "@/components/charts/BarChart.vue"
+import Doughnut from "@/components/charts/Doughnut.vue"
+
 export default {
-  components: [TagCloud],
+  components: { TagCloud, WordCloud, BarChart, Doughnut },
+  data() {
+    return {
+      texts: 'nothing',
+      isOpened: false
+    }
+  },
+  methods: {
+    onClick(e) {
+      this.isOpened = true
+      if (e.target.className === 'tagcloud--item') {
+        this.texts = e.target.innerText
+        console.log(this.texts)
+
+      }
+
+    }
+  },
   mounted() {
-    const Texts = [
-      "Путешествия",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Животные",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Путешествия",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Животные",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Путешествия",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-      "Животные",
-      "Еда",
-      "Лаборатория",
-      "Наука",
-      "Музыка",
-      "Искусство",
-      "Люди",
-    ];
+    const Texts = ['Антифашистский', 'Казать', 'Каркас', 'Клуша', 'Критика', 'Отсвечивать', 'Пробрить', 'Тем'];
 
     let tagCloud = TagCloud(".Sphere", Texts, {
       // Sphere radius in px
@@ -77,16 +64,13 @@ export default {
     });
 
     // Giving color to each text in sphere
-    let color = "#5fff";
-
+    let color = "#544adde1";
     document.querySelector(".Sphere").style.color = color;
-    let rootEl = document.querySelector(".tagcloud");
-    rootEl.addEventListener("click", function clickEventHandler(e) {
-      if (e.target.className === "tagcloud--item") {
-      }
-    });
-  },
-};
+    // let rootEl = this.$el.querySelector(".tagcloud");
+    let element = this.$refs['tagcloud--item']
+    element.addEventListener('click', this.onClick);
+  }
+}
 </script>
 
 <style>
@@ -94,7 +78,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 .backbody {
-  background-color: #000;
+  background-color: #bba0a049;
 }
 
 /* Applying CSS to sphere */

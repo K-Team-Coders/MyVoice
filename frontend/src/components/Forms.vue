@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-xl">
+  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-lg">
     <form class="">
       <div class="flex items-center border-b border-orangeGod py-2">
         <input
@@ -41,37 +41,6 @@ export default {
       this.isTyping = false;
     }, 100),
 
-    submitFiles() {
-      let formData = new FormData();
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
-        formData.append("files[" + i + "]", file);
-      }
-      let FileArray = [];
-      for (var value of formData.values()) {
-        FileArray.push(value);
-      }
-      console.log({ files: formData });
-      axios
-        .post(
-          "http://26.200.185.61:8082/files/",
-          { files: formData },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data/",
-            },
-          }
-        )
-        .then(function () {
-          console.log("SUCCESS!!");
-        })
-        .catch(function () {
-          console.log("FAILURE!!");
-        });
-    },
-    handleFilesUpload() {
-      this.files = this.$refs.files.files;
-    },
 
     submitText() {
       let text = this.text;

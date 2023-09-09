@@ -16,7 +16,7 @@ export default {
   data(){
       return {
           chartData: {
-      labels: ['Eating','Drinking','Sleeping','Designing','Coding', 'Cycling', 'Running'],
+      labels: ['Положительных', 'Нейтральных', 'Отрицательных'],
       datasets: [
         {
           backgroundColor: 'rgba(179,181,198,0.2)',
@@ -25,7 +25,7 @@ export default {
           pointBorderColor: '#fff',
           pointHoverBackgroundColor: '#fff',
           pointHoverBorderColor: 'rgba(179,181,198,1)',
-          data: [65, 59, 90, 81, 56, 55, 40]
+          data: [65, 59, 90,]
         }
       ]
     },

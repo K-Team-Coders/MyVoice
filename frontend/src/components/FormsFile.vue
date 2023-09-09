@@ -6,7 +6,7 @@
       <div class="flex justify-start">
         <input
           v-on:change="handleFilesUpload()"
-          multiple="multiple"
+          
           class="w-full text-sm text-gray-700 border-[0.5px] py-1 px-2 border-orange-500 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
           aria-describedby="file_input_help"
           id="files"
@@ -41,32 +41,25 @@ export default {
     };
   },
   methods: {
-    startTyping() {
-      this.isTyping = true;
-      this.debounceStopTyping();
-    },
-    debounceStopTyping: debounce(function () {
-      this.isTyping = false;
-    }, 100),
 
     submitFiles() {
+      console.log(this.files)
       let formData = new FormData();
       for (var i = 0; i < this.files.length; i++) {
         let file = this.files[i];
-        formData.append("files[" + i + "]", file);
+        formData.append('file', file);
       }
-      let FileArray = [];
-      for (var value of formData.values()) {
-        FileArray.push(value);
-      }
-      console.log({ files: formData });
+      // let FileArray = [];
+      // for (var value of formData.values()) {
+      //   FileArray.push(value);
+      // }
+      console.log(formData);
       axios
         .post(
-          "http://26.200.185.61:8082/files/",
-          { files: formData },
+          "http://26.200.185.61:8082/files/", formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data/",
+              'Content-Type': 'multipart/form-data',
             },
           }
         )
@@ -81,15 +74,6 @@ export default {
       this.files = this.$refs.files.files;
     },
 
-    submitText() {
-      let text = this.text;
-      axios
-        .post("http://26.200.185.61:8082/answer", { usertext: text })
-        .then((response) => console.log(response.data))
-        .catch(function () {
-          console.log("Ошибка в отправке файла");
-        });
-    },
   },
 };
 </script>
