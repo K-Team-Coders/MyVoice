@@ -3,7 +3,7 @@
     <form class="">
       <div class="flex items-center border-b border-orangeGod py-2">
         <input
-          @input="startTyping()"
+          @input="text_processing()"
           v-model="text"
           class="appearance-none bg-transparent border-none w-full text-gray-700 font-semibold mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
@@ -39,6 +39,7 @@ export default {
       files: "",
       text: "",
       isTyping: false,
+      textisProessing: false
     };
   },
   methods: {
@@ -46,15 +47,33 @@ export default {
       this.isTyping = true;
       this.debounceStopTyping();
     },
-    debounceStopTyping: debounce(function () {
+    
+ debounceStopTyping: debounce(function () {
       this.isTyping = false;
     }, 500),
-
-    text_processing(){},
+    text_processing(){
+      this.isTyping = true;
+      this.debounceStopTyping()
+      setTimeout(() => {if (this.isTyping == false){
+        console.log(this.text)
+        axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, { usertext: this.text })
+        .then((response) => {console.log(response.data);
+        })
+        .catch(function () {
+          console.log("Ошибка в обработке");
+        });
+      }
+      else{
+        console.log('Даун')
+      }}, 600);
+      console.log(this.isTyping)
+      
+      
+    },
     submitText() {
       let text = this.text;
       axios
-        .post("http://26.200.185.61:8082/answer", { usertext: text })
+        .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, { usertext: text })
         .then((response) => console.log(response.data))
         .catch(function () {
           console.log("Ошибка в отправке файла");
