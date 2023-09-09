@@ -1,5 +1,6 @@
 import os
 import time
+import json
 
 import psycopg2
 import numpy as np
@@ -57,7 +58,26 @@ model_name = "bert-base-multilingual-cased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
+
+# Receive actual tables list
+def getTables():
+    cur.execute("""SELECT * FROM tables_list""")
+    data = cur.fetchall()
+    result = []
+    for index, subdata in enumerate(data):
+        table_id = subdata[0]
+        table_head_question = subdata[1]
+
+        result.append({
+            'table_id': table_id,
+            'table_head_question': table_head_question
+        })
+
+    return result
+
+
 app = FastAPI()
+
 
 origins = ["*"]
 
@@ -69,26 +89,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
-
-# Tables list output with question for FRONTEND COMBOBOX
+# Tables list output with question for FRONTEND
 @app.get("/tableslist")
 def tableslist():
-    cur.execute("""SELECT * FROM tables_list""")
-    data = cur.fetchall()
-    result = []
-    for index, subdata in enumerate(data):
-        table_id = data[0]
-        table_head_question = data[1]
+    return JSONResponse({"result" : getTables()})
 
-        result.append({
-            'table_id': table_id,
-            'table_head_question': table_head_question
-        })
-
-    return result
+@app.get("/tabledetailview")
+def tabledetailview(item: str):
+    cur.execute(f"""SELECT * FROM {str}""")
+    return JSONResponse({'nothing': 'nothing'})
 
 # Answer model for POST
 class Answer(BaseModel):
@@ -115,12 +124,71 @@ def answerProcessing(item: Answer):
 
 # JSON files processing (filtering --> database)
 @app.post("/files")
-def filesProcessing(file: UploadFile):
-    logger.debug(file.filename)
+def filesProcessing(file: UploadFile = File(...)):
+    tables = getTables()
+    
     data = file.file.read()
-    logger.debug(data)
-    return Response(status_code=201)
+    jsoned = json.loads(bytes.decode(data))
 
+    # Identity check
+    id_ = jsoned['id']
+    question = jsoned['question']
+
+    logger.debug(tables)
+    
+    identity_checker = False
+    for index, data in enumerate(tables):
+        if data['table_id'] == id_ and data["table_head_question"] == question:
+            identity_checker = True
+        else:
+            pass
+
+    if identity_checker:
+        return Response(status_code=400)
+    else:
+        logger.debug(jsoned["answers"])
+        data = jsoned["answers"]
+
+        # Sign In Table in DB
+        cur.execute("""
+                    INSERT INTO tables_list
+                        (table_id, table_head_question)
+                    VALUES (%s, %s);
+                        """, (id_, question))
+        conn.commit()
+
+        # Create new relation in DB
+        cur.execute("""
+                    CREATE TABLE "%s" 
+                    (answer text, count integer, positive real, neutral real, negative real, t9 text, PRIMARY KEY ('answer', 'count', 'positive', 'neutral', 'negative', 't9')));
+                    """, (id_, ))
+        conn.commit()
+
+        for subdata in data:
+            answer = str(subdata["answer"])
+            count = subdata["count"]
+            
+            scores = tone(answer)
+            t9_correction = t9(answer)
+
+            positive = scores['pos']
+            neutral =  scores['neu']
+            negative = scores['neg']
+            t9 = t9_correction["t9_corretion"]
+            
+            # Add individual answer to new table
+            cur.execute("""
+                        INSERT INTO "%s" 
+                            (answer, count, positive, neutral, negative, t9)
+                        VALUES
+                            (%s, %s, %s, %s, %s, %s)
+                        """, (id_, answer, count, positive, neutral, negative, t9))
+            conn.commit()
+
+    # Я должен вернуть ему список всех айди и вопросов
+    return JSONResponse(content=getTables(), status_code=201)
+
+# Clusterisation
 @app.post("/clusters")
 def get_s_text(text: List[str] = Query(None)):
 
