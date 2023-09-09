@@ -24,7 +24,7 @@ from ml.emoji import remove_emoji
 from ml.tone import tone
 from ml.t9 import t9
 from ml.transform import translate_with_en
-from ml.services import get_text, get_bert_embeddings
+from ml.services import get_text, get_bert_embeddings, get_text
 
 # Initial code
 # Database connection setup
@@ -104,11 +104,13 @@ def tabledetailview(id_: str):
     tables = getTables()
     
     # Check for identity of tables
+    headQuestion = 0
     identitity_checker = False
     for index, data in enumerate(tables):
         logger.debug(data["table_id"])
         if str(data["table_id"]) == id_:  
             identitity_checker = True
+            headQuestion = data["table_head_question"]
 
     # Take data from files loading into DB
     if identitity_checker:
@@ -129,7 +131,7 @@ def tabledetailview(id_: str):
             logger.debug(subdata[4]) # negative
             logger.debug(subdata[5]) # t9
 
-            clustarisationData.append(subdata[0])
+            clustarisationData.append(get_text(subdata[0]))
             countsData.append(subdata[1])
             positiveData.append(subdata[2])
             neutralData.append(subdata[3])
@@ -233,6 +235,7 @@ def tabledetailview(id_: str):
             )
         
         result = {
+            "headQuestion": headQuestion,
             "totalPositive": totalPositive,
             "totalNeutral": totalNeutral,
             "totalNegative": totalNegative,
