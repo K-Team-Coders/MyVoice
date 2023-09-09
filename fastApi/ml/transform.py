@@ -34,4 +34,3 @@ def translate_with_en(txt):
             text+=translate_txt(txt[i])+" "
         i+=1
     return text
-print(translate_with_en(f"'nj ghjcnj ghtrhfcyj? Acer ltkftn dtob"))

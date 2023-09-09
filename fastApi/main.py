@@ -1,6 +1,9 @@
 import os
 import time
 import json
+import collections
+from dotenv import load_dotenv
+load_dotenv('../DB.env')
 
 import psycopg2
 import numpy as np
@@ -17,8 +20,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # ml features
+from ml.emoji import remove_emoji
 from ml.tone import tone
 from ml.t9 import t9
+from ml.transform import translate_with_en
 from ml.services import get_text, get_bert_embeddings
 
 # Initial code
@@ -108,8 +113,11 @@ class Answer(BaseModel):
 def answerProcessing(item: Answer):
     logger.debug(f"Answer is --- {item.usertext}")
 
-    scores = tone(item.usertext)
-    t9_correction = t9(item.usertext)
+    answer = translate_with_en(item.usertext)
+    answer = remove_emoji(item.usertext)
+
+    scores = tone(answer)
+    t9_correction = t9(answer)
 
     result = {
         "positive": scores['pos'],
@@ -163,16 +171,41 @@ def filesProcessing(file: UploadFile = File(...)):
                     (answer text, count integer, positive real, neutral real, negative real, t9 text, PRIMARY KEY (answer, count, positive, neutral, negative, t9));
                     """, (id_, ))
         conn.commit()
-
+        
+        # Data filling
+        
+        # Preprocess data identity error 
+        result_answers = []
         for subdata in data:
-            answer = str(subdata["answer"])
-            count = subdata["count"]
+            logger.debug(subdata)
+
+            answer = subdata['answer']
+            # answer = translate_with_en(answer)
+
+            logger.debug(answer)
+
+            answer = remove_emoji(answer) 
             
             logger.debug(answer)
 
-            scores = tone(answer)
-            t9_correction = t9(answer)
+            result_answers.append(answer)
 
+        logger.debug(result_answers)
+        count = collections.Counter(result_answers)
+        for subanswer in count: 
+
+            logger.debug(count[subanswer])
+            logger.debug(subanswer)
+            counts = count[subanswer]
+            
+            # Обработка на момент эмоджи 
+            scores = 0
+            try:
+                scores = tone(subanswer)
+            except:
+                scores = {'pos': 0.0, 'neu': 0.0, 'neg':0.0}
+            
+            t9_correction = t9(subanswer)
             positive = scores['pos']
             neutral =  scores['neu']
             negative = scores['neg']
@@ -185,7 +218,7 @@ def filesProcessing(file: UploadFile = File(...)):
                                 (answer, count, positive, neutral, negative, t9)
                             VALUES
                                 (%s, %s, %s, %s, %s, %s)
-                            """, (id_, answer, count, positive, neutral, negative, t9_text))
+                            """, (id_, answer, counts, positive, neutral, negative, t9_text))
                 conn.commit()
             except psycopg2.errors.UniqueViolation:
                 conn.rollback()
@@ -193,7 +226,7 @@ def filesProcessing(file: UploadFile = File(...)):
                             UPDATE "%s" 
                             SET "count" = %s
                             WHERE "answer" = %s
-                            """, (id_, count+1, answer)) 
+                            """, (id_, counts+1, answer)) 
                 conn.commit()
 
     # Я должен вернуть ему список всех айди и вопросов
