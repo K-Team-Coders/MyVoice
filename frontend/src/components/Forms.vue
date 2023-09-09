@@ -11,8 +11,8 @@
           aria-label="Full name"
         />
         <div>
-      <small v-if="isTyping">Чел печатает...</small>
-    </div>
+          <small v-if="isTyping" class="mr-10">Чел печатает...</small>
+        </div>
         <button
           @click="submitText()"
           class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
@@ -21,11 +21,28 @@
           Отправить
         </button>
       </div>
-      <div class="flex flex-col pt-2">
+      <div class="grid grid-cols-8 pt-2 gap-1">
+        <p
+          class="py-0.5 px-1 rounded-xl bg-gray-100 text-center border-2 border-blueGod"
+          @click=""
+        >
+          Сахар
+        </p>
+      </div>
+      <div class="flex flex-col pt-1">
         <p class="text-gray-500">Вероятность того что ваш ответ будет:</p>
-        <p class=""><span class="text-green-500 mr-2"> ■</span>Положительным - {{ tone.positive }}</p>
-        <p class=""><span class="text-gray-400 mr-2"> ■</span>Нейтральным - {{ tone.neutral }}</p>
-        <p class=""><span class="text-red-500 mr-2"> ■</span>Отрицательным - {{ tone.negative }}</p>
+        <p class="">
+          <span class="text-green-500 mr-2"> ■</span>Положительным -
+          {{ tone.positive }}
+        </p>
+        <p class="">
+          <span class="text-gray-400 mr-2"> ■</span>Нейтральным -
+          {{ tone.neutral }}
+        </p>
+        <p class="">
+          <span class="text-red-500 mr-2"> ■</span>Отрицательным -
+          {{ tone.negative }}
+        </p>
       </div>
     </form>
   </div>
@@ -40,7 +57,7 @@ export default {
       files: "",
       text: "",
       isTyping: false,
-      textisProessing: false
+      textisProessing: false,
     };
   },
   methods: {
@@ -48,33 +65,40 @@ export default {
       this.isTyping = true;
       this.debounceStopTyping();
     },
-    
- debounceStopTyping: debounce(function () {
+
+    textChange() {},
+
+    debounceStopTyping: debounce(function () {
       this.isTyping = false;
     }, 500),
-    text_processing(){
+    text_processing() {
       this.isTyping = true;
-      this.debounceStopTyping()
-      setTimeout(() => {if (this.isTyping == false){
-        console.log(this.text)
-        axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, { usertext: this.text })
-        .then((response) => {this.tone = response.data;
-        })
-        .catch(function () {
-          console.log("Ошибка в обработке");
-        });
-      }
-      else{
-        console.log('Даун')
-      }}, 600);
-      console.log(this.isTyping)
-      
-      
+      this.debounceStopTyping();
+      setTimeout(() => {
+        if (this.isTyping == false) {
+          console.log(this.text);
+          axios
+            .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, {
+              usertext: this.text,
+            })
+            .then((response) => {
+              this.tone = response.data;
+            })
+            .catch(function () {
+              console.log("Ошибка в обработке");
+            });
+        } else {
+          console.log("Даун");
+        }
+      }, 600);
+      console.log(this.isTyping);
     },
     submitText() {
       let text = this.text;
       axios
-        .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, { usertext: text })
+        .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, {
+          usertext: text,
+        })
         .then((response) => console.log(response.data))
         .catch(function () {
           console.log("Ошибка в отправке файла");
