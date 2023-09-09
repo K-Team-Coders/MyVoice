@@ -9,5 +9,4 @@ def t9(text):
             cor += word+' '
         else:
             cor += spell.correction(word)+' '
-    return cor
-print(t9('привед бротанн'))
+    return {"t9_corretion" : cor}
