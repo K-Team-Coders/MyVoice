@@ -1,5 +1,6 @@
 import os
 import time
+import json
 
 import psycopg2
 import numpy as np
@@ -64,8 +65,8 @@ def getTables():
     data = cur.fetchall()
     result = []
     for index, subdata in enumerate(data):
-        table_id = data[0]
-        table_head_question = data[1]
+        table_id = subdata[0]
+        table_head_question = subdata[1]
 
         result.append({
             'table_id': table_id,
@@ -127,17 +128,65 @@ def filesProcessing(file: UploadFile = File(...)):
     tables = getTables()
     
     data = file.file.read()
-    jsoned = dict(bytes.decode(data))
+    jsoned = json.loads(bytes.decode(data))
 
     # Identity check
-    logger.debug(tables)
+    id_ = jsoned['id']
+    question = jsoned['question']
 
-    logger.debug(jsoned)
-    logger.debug(jsoned['id'])
-    logger.debug(jsoned['question'])
+    logger.debug(tables)
+    
+    identity_checker = False
+    for index, data in enumerate(tables):
+        if data['table_id'] == id_ and data["table_head_question"] == question:
+            identity_checker = True
+        else:
+            pass
+
+    if identity_checker:
+        return Response(status_code=400)
+    else:
+        logger.debug(jsoned["answers"])
+        data = jsoned["answers"]
+
+        # Sign In Table in DB
+        cur.execute("""
+                    INSERT INTO tables_list
+                        (table_id, table_head_question)
+                    VALUES (%s, %s);
+                        """, (id_, question))
+        conn.commit()
+
+        # Create new relation in DB
+        cur.execute("""
+                    CREATE TABLE "%s" 
+                    (answer text, count integer, positive real, neutral real, negative real, t9 text, PRIMARY KEY ('answer', 'count', 'positive', 'neutral', 'negative', 't9')));
+                    """, (id_, ))
+        conn.commit()
+
+        for subdata in data:
+            answer = str(subdata["answer"])
+            count = subdata["count"]
+            
+            scores = tone(answer)
+            t9_correction = t9(answer)
+
+            positive = scores['pos']
+            neutral =  scores['neu']
+            negative = scores['neg']
+            t9 = t9_correction["t9_corretion"]
+            
+            # Add individual answer to new table
+            cur.execute("""
+                        INSERT INTO "%s" 
+                            (answer, count, positive, neutral, negative, t9)
+                        VALUES
+                            (%s, %s, %s, %s, %s, %s)
+                        """, (id_, answer, count, positive, neutral, negative, t9))
+            conn.commit()
 
     # Я должен вернуть ему список всех айди и вопросов
-    return JSONResponse(content=tables)
+    return JSONResponse(content=getTables(), status_code=201)
 
 # Clusterisation
 @app.post("/clusters")
