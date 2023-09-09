@@ -11,7 +11,7 @@
       </div>
       <div class="flex justify-end pt-2">
         <button @click="submitFiles()" type="submit"
-          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2">
+          class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-700 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2">
           Отправить файл
         </button>
       </div>
