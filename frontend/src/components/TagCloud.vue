@@ -1,6 +1,6 @@
 <template>
   <div class="backbody flex flex-col rounded-2xl w-full justify-center">
-    <div class="flex justify-center gap-3">
+    <div class="2xl:flex sm:flex-row sm:p-40  justify-center gap-3">
       <div class="bg-whitesmoke rounded-xl p-4">
         <BarChart />
       </div>
@@ -11,7 +11,6 @@
         <Doughnut></Doughnut>
       </div>
     </div>
-
     <div v-if="isOpened" class="flex flex-col pt-10 justify-center text-center">
       <p class="bg-idealblack text-whitesmoke font-bold text-3xl">Кластер: {{ texts }}</p>
       <WordCloud />

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-4 border-[1.5px] border-orangeGod shadow-md">
+  <div class="bg-gray-50 2xl:max-w-4xl xl:max-w-4xl lg:max-w-xl md:max-w-xl sm:max-w-md max-w-sm w-full px-4 py-4 border-[1.5px] border-orangeGod shadow-md">
     <form action="">
       <div class="flex justify-start">
         <input v-on:change="handleFilesUpload()"

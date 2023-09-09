@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-2.5 px-2 grid-cols-4">
+  <div class="grid gap-2.5 px-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2">
     <div
       class="bg-gray-50 h-[250px] py-2 font-bold text-idealblack text-start hover:border-blueGod cursor-pointer shadow-inner hover:text-whitesmoke  hover:bg-orangeGod transition ease-in-out delay-50 relative"
       v-for="item in question_list"
