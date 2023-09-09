@@ -57,25 +57,9 @@ model_name = "bert-base-multilingual-cased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
-app = FastAPI()
 
-origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
-
-# Tables list output with question for FRONTEND COMBOBOX
-@app.get("/tableslist")
-def tableslist():
+# Receive actual tables list
+def getTables():
     cur.execute("""SELECT * FROM tables_list""")
     data = cur.fetchall()
     result = []
@@ -89,6 +73,30 @@ def tableslist():
         })
 
     return result
+
+
+app = FastAPI()
+
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Tables list output with question for FRONTEND
+@app.get("/tableslist")
+def tableslist():
+    return JSONResponse({"result" : getTables()})
+
+@app.get("/tabledetailview")
+def tabledetailview(item: str):
+    cur.execute(f"""SELECT * FROM {str}""")
+    return JSONResponse({'nothing': 'nothing'})
 
 # Answer model for POST
 class Answer(BaseModel):
@@ -115,12 +123,23 @@ def answerProcessing(item: Answer):
 
 # JSON files processing (filtering --> database)
 @app.post("/files")
-def filesProcessing(file: UploadFile):
-    logger.debug(file.filename)
+def filesProcessing(file: UploadFile = File(...)):
+    tables = getTables()
+    
     data = file.file.read()
-    logger.debug(data)
-    return Response(status_code=201)
+    jsoned = dict(bytes.decode(data))
 
+    # Identity check
+    logger.debug(tables)
+
+    logger.debug(jsoned)
+    logger.debug(jsoned['id'])
+    logger.debug(jsoned['question'])
+
+    # Я должен вернуть ему список всех айди и вопросов
+    return JSONResponse(content=tables)
+
+# Clusterisation
 @app.post("/clusters")
 def get_s_text(text: List[str] = Query(None)):
 
