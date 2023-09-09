@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-4 border-[1.5px] border-orangeGod shadow-md">
+  <div class="bg-gray-50 2xl:max-w-4xl xl:max-w-4xl lg:max-w-xl md:max-w-xl sm:max-w-md max-w-sm w-full px-4 py-4 border-[1.5px] border-orangeGod shadow-md">
     <form action="">
       <div class="flex justify-start">
         <input v-on:change="handleFilesUpload()"
@@ -11,7 +11,7 @@
       </div>
       <div class="flex justify-end pt-2">
         <button @click="submitFiles()" type="submit"
-          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2">
+          class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-700 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2">
           Отправить файл
         </button>
       </div>

@@ -2,7 +2,7 @@
   <body>
     <Header2></Header2>
     <div class="bg-idealblack">
-      <p class="text-whitesmoke text-3xl text-center font-semibold pt-8">
+      <p class="text-whitesmoke 2xl:text-3xl text-lg text-center font-semibold pt-8">
         Пойдем в горы?
       </p>
       <div class="py-10">

@@ -1,19 +1,26 @@
 <template>
   <div class="backbody flex flex-col rounded-2xl w-full justify-center">
-    <div class="flex justify-center gap-3">
-      <div class="bg-whitesmoke rounded-xl p-4">
+    <div class="2xl:flex flex-row sm:px-40 px-4 gap-4 justify-center">
+      <div
+        class="bg-whitesmoke rounded-xl p-4 lg:max-w-2xl sm:max-w-lg w-full mx-auto"
+      >
         <BarChart />
       </div>
-      <div class="bg-whitesmoke rounded-xl p-4">
+      <div
+        class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-lg sm:mx-auto"
+      >
         <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
       </div>
-      <div class="bg-whitesmoke rounded-xl p-4">
+      <div
+        class="bg-whitesmoke rounded-xl sm:p-4 p-10 lg:max-w-2xl sm:mx-auto  sm:max-w-lg"
+      >
         <Doughnut></Doughnut>
       </div>
     </div>
-
-    <div v-if="isOpened" class="flex flex-col pt-10 justify-center text-center">
-      <p class="bg-idealblack text-whitesmoke font-bold text-3xl">Кластер: {{ texts }}</p>
+    <div v-if="isOpened" class="flex flex-col pt-10 px-6 justify-center text-center">
+      <p class="bg-idealblack text-whitesmoke font-bold sm:text-3xl">
+        Кластер: {{ texts }}
+      </p>
       <WordCloud />
     </div>
   </div>

@@ -99,9 +99,26 @@ app.add_middleware(
 def tableslist():
     return JSONResponse({"result" : getTables()})
 
-@app.get("/tabledetailview")
-def tabledetailview(item: str):
-    cur.execute(f"""SELECT * FROM {str}""")
+@app.post("/tabledetailview/{id_}")
+def tabledetailview(id_: str):
+    tables = getTables()
+    
+    # Check for identity of tables
+    identitity_checker = False
+    for index, data in enumerate(tables):
+        logger.debug(data["table_id"])
+        if str(data["table_id"]) == id_:  
+            identitity_checker = True
+
+    # Take data from files loading into DB
+    if identitity_checker:
+        cur.execute(f""" SELECT * FROM "%s" """, (id_,))
+        data = cur.fetchall()
+
+        for index, subdata in enumerate(data):
+            logger.debug(subdata)
+            
+
     return JSONResponse({'nothing': 'nothing'})
 
 # Answer model for POST

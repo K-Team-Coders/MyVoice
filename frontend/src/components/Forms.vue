@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-lg">
+  <div class="bg-gray-50 2xl:max-w-4xl xl:max-w-3xl lg:max-w-2xl md:max-w-2xl sm:max-w-xl max-w-[320px] p-4 w-full px-4 py-3 rounded-lg">
     <form class="">
       <div class="flex items-center border-b border-orangeGod py-2">
         <input
@@ -15,11 +15,11 @@
           <small v-if="textisProcessing" class="mr-10"
             >Обработка запроса...</small
           >
-          <small v-if="isTyping" class="mr-10">Пользователь печатает...</small>
+          <small v-if="isTyping" class="2xl:mr-10">Пользователь печатает...</small>
         </div>
         <button
           @click="submitText()"
-          class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
+          class="flex-shrink-0 bg-orange-600 hover:bg-orange-700 border-orange-600 hover:border-orange-700 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
           type="button"
         >
           Отправить

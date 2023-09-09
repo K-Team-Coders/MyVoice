@@ -2,10 +2,10 @@
   <body class="">
     <Header></Header>
     <div class="bg-idealblack min-h-[700px]">
-      <div class="flex gap-3 pt-14 justify-center">
+      <div class="flex gap-3 pt-14 px-10 justify-center">
         <FormsFile></FormsFile>
       </div>
-      <div class="px-24 py-12">
+      <div class="sm:px-24 px-8 py-12">
         <QuestionBlog :question_list="question_list"></QuestionBlog>
       </div>
     </div>
