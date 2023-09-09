@@ -18,6 +18,12 @@
           Отправить
         </button>
       </div>
+      <div class="flex flex-col pt-2">
+        <p class="text-gray-500">Вероятность того что ваш ответ будет:</p>
+        <p class=""><span class="text-green-500 mr-2"> ■</span>Положительным - </p>
+        <p class=""><span class="text-gray-400 mr-2"> ■</span>Нейтральным - </p>
+        <p class=""><span class="text-red-500 mr-2"> ■</span>Отрицательным - </p>
+      </div>
     </form>
   </div>
 </template>
@@ -40,7 +46,6 @@ export default {
     debounceStopTyping: debounce(function () {
       this.isTyping = false;
     }, 100),
-
 
     submitText() {
       let text = this.text;
