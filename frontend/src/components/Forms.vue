@@ -10,7 +10,7 @@
           placeholder="Напишите ваш ответ"
           aria-label="Full name"
         />
-        <p v-if="isError" class="mr-10">ОШИБКА В ОБРАБОТКЕ</p>
+      
         <div>
           <small v-if="textisProcessing" class="mr-10"
             >Обработка запроса...</small
@@ -28,9 +28,9 @@
       <div class="flex pt-2">
         <p
           class="text-sm rounded-lg bg-gray-100 text-center border-2 border-blueGod px-4 hover:bg-blue-600 cursor-pointer hover:text-whitesmoke"
-          @click="t9_text_change('Грядет событие')"
+          @click="t9_text_change(tone.t9)"
         >
-        Грядет 
+        {{tone.t9}}
         </p>
       </div>
       <div class="flex flex-col pt-1">

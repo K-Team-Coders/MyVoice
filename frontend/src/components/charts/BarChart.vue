@@ -1,5 +1,5 @@
 <template>
-    <Bar :chart-data="chartData" />
+    <Bar :chart-data="chartData" :chart-options="chartOptions" />
 </template>
 
 <script>
@@ -24,14 +24,25 @@ export default {
       "Пробрить",
       "Тем",
     ],
+    
         datasets: [
           {
-            label: 'Распределение по кластерам',
-            backgroundColor: '#FF7E00',
-            data: [40, 20, 12, 21, 54, 12,5, 54, 123]
-          }
+            label: 'Положительны',
+            backgroundColor: '#00cf00',
+            data: [1, 21, 42, 21, 43, 1,8, 12, 42],
+           
+          },
+          {label: 'Нейтральных',
+            backgroundColor: '#D0D0D0',
+            data: [40, 20, 12, 21, 54, 12,5, 54, 123]},
+            {label: 'Негативных',
+            backgroundColor: 'red',
+            data: [100, 24, 65, 23, 87, 23,55, 88, 1]}
         ]
-      }   
+      }  ,
+      chartOptions: {
+        stacked: true
+      }
     }
   }
 }

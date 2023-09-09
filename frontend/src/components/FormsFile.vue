@@ -59,8 +59,8 @@ export default {
         })
         .catch(function (response) {
           console.log("FAILURE!!");
-          if (response.statusCode !== 400) {
-            
+          if (response.statusCode == 400) {
+            alert('Такой файл уже был загружен! Загрузите другой.')
           }
         });
        
