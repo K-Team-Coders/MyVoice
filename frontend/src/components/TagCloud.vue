@@ -3,7 +3,9 @@
     <p>Положительных: </p>
     <p>Нейтральных: </p>
     <p>Отрицательных: </p>
-    <span ref="tagcloud--item" class="Sphere"></span>
+    <BarChart/>
+    <Doughnut></Doughnut>
+    <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
 
     <div v-if="isOpened">
       <p class="bg-whitesmoke text-3xl">Кластер: {{ texts }}</p>
@@ -20,8 +22,11 @@
 
 import TagCloud from "TagCloud";
 import WordCloud from "@/components/WordCloud.vue"
+import BarChart from "@/components/charts/BarChart.vue"
+import Doughnut from "@/components/charts/Doughnut.vue"
+
 export default {
-  components: { TagCloud, WordCloud },
+  components: { TagCloud, WordCloud, BarChart, Doughnut },
   data() {
     return {
       texts: 'nothing',
@@ -79,15 +84,14 @@ export default {
 /* Applying CSS to sphere */
 .tagcloud {
   display: inline-block;
-  left: 30%;
   font-weight: bold;
   letter-spacing: 1px;
   font-family: "Roboto", italic;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 /* Change color of each text in sphere on hover   */
 .tagcloud--item:hover {
-  color: #1a128fe1;
+  color: rgb(255, 255, 255);
 }
 </style>

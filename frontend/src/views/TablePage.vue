@@ -1,13 +1,17 @@
 <template>
-  <body class="bg-idealblack">
+  <body >
     <Header2></Header2>
-    <p class="text-whitesmoke text-3xl text-center font-semibold pt-12">Пойдем в горы?</p>
-    <div class="py-10">
-      <div class="flex justify-center">
-        <Forms></Forms>
-      </div>
-      <div class="px-40">
-        <TagCloud></TagCloud>
+    <div class="bg-idealblack">
+      <p class="text-whitesmoke text-3xl text-center font-semibold pt-12">
+        Пойдем в горы?
+      </p>
+      <div class="py-10">
+        <div class="flex justify-center">
+          <Forms></Forms>
+        </div>
+        <div class="flex justify-center">
+          <TagCloud></TagCloud>
+        </div>
       </div>
     </div>
     <Footer></Footer>

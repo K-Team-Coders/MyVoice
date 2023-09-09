@@ -3,7 +3,7 @@
     class="bg-gray-50 max-w-2xl w-full px-4 py-4 rounded-xl border-[1.5px] border-orangeGod shadow-md"
   >
     <form action="">
-      <div class="flex justify-start">
+      <div class="flex justify-start pt-1">
         <input
           v-on:change="handleFilesUpload()"
           multiple="multiple"
@@ -17,11 +17,11 @@
           .json
         </p>
       </div>
-      <div class="flex justify-end pt-2">
+      <div class="flex justify-end pt-3">
         <button
           @click="submitFiles()"
           type="submit"
-          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-2"
+          class="text-white bg-orangeGod hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-600 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
           Отправить файл
         </button>
