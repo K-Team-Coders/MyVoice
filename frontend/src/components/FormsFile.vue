@@ -41,13 +41,6 @@ export default {
     };
   },
   methods: {
-    startTyping() {
-      this.isTyping = true;
-      this.debounceStopTyping();
-    },
-    debounceStopTyping: debounce(function () {
-      this.isTyping = false;
-    }, 100),
 
     submitFiles() {
       let formData = new FormData();
@@ -59,11 +52,11 @@ export default {
       for (var value of formData.values()) {
         FileArray.push(value);
       }
-      console.log({ files: formData });
+      console.log(typeof formData.toString());
       axios
         .post(
           "http://26.200.185.61:8082/files/",
-          { files: formData },
+          {'file': formData.toString() },
           {
             headers: {
               "Content-Type": "multipart/form-data/",
@@ -81,15 +74,6 @@ export default {
       this.files = this.$refs.files.files;
     },
 
-    submitText() {
-      let text = this.text;
-      axios
-        .post("http://26.200.185.61:8082/answer", { usertext: text })
-        .then((response) => console.log(response.data))
-        .catch(function () {
-          console.log("Ошибка в отправке файла");
-        });
-    },
   },
 };
 </script>
