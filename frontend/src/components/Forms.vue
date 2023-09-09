@@ -2,31 +2,25 @@
   <div class="bg-gray-50 max-w-2xl w-full px-4 py-3 rounded-lg">
     <form class="">
       <div class="flex items-center border-b border-orangeGod py-2">
-        <input
-          @input="text_processing()"
-          v-model="text"
+        <input @input="text_processing()" v-model="text"
           class="appearance-none bg-transparent border-none w-full text-gray-700 font-semibold mr-3 py-1 px-2 leading-tight focus:outline-none"
-          type="text"
-          placeholder="Напишите ваш ответ"
-          aria-label="Full name"
-        />
+          type="text" placeholder="Напишите ваш ответ" aria-label="Full name" />
+          <p v-if="isError" class="mr-10">ОШИБКА В ОБРАБОТКЕ</p>
         <div>
-          <small v-if="isTyping" class="mr-10">Чел печатает...</small>
+          <small v-if="textisProcessing" class="mr-10">Обработка запроса...</small>
+          <small v-if="isTyping" class="mr-10 animate-spin"></small>
         </div>
-        <button
-          @click="submitText()"
+        <button @click="submitText()"
           class="flex-shrink-0 bg-orangeGod hover:bg-orange-600 border-orangeGod hover:border-orange-600 text-sm border-4 text-white font-semibold py-1 px-2 rounded"
-          type="button"
-        >
+          type="button">
           Отправить
         </button>
       </div>
-      <div class="grid grid-cols-8 pt-2 gap-1">
-        <p
-          class="py-0.5 px-1 rounded-xl bg-gray-100 text-center border-2 border-blueGod"
-          @click=""
-        >
-          Сахар
+      <div class="grid grid-cols-4 pt-2 gap-1">
+
+        <p class="py-0.5 px-1 rounded-xl bg-gray-100 text-center border-2 border-blueGod"
+          @click="t9_text_change(tone.t9)">Исправленный вариант:
+          {{ tone.t9 }}
         </p>
       </div>
       <div class="flex flex-col pt-1">
@@ -57,41 +51,53 @@ export default {
       files: "",
       text: "",
       isTyping: false,
-      textisProessing: false,
+      textisProcessing: false,
+      isError: false
     };
   },
   methods: {
+    t9_text_change(t9) {
+      this.text = t9
+    },
     startTyping() {
       this.isTyping = true;
       this.debounceStopTyping();
     },
 
-    textChange() {},
+    textChange() { },
 
     debounceStopTyping: debounce(function () {
       this.isTyping = false;
     }, 500),
     text_processing() {
+      this.isError = false
       this.isTyping = true;
       this.debounceStopTyping();
       setTimeout(() => {
         if (this.isTyping == false) {
-          console.log(this.text);
+          this.textisProcessing = true,
+         
           axios
             .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, {
-              usertext: this.text,
+              usertext: this.text
             })
             .then((response) => {
               this.tone = response.data;
+              this.textisProcessing = false
             })
             .catch(function () {
               console.log("Ошибка в обработке");
+              this.textisProcessing = false
+              this.isError = true
             });
+          this.textisProcessing = false
         } else {
-          console.log("Даун");
+          console.log("Ошибка ");
+          this.textisProcessing = false
+          this.isError = true
         }
       }, 600);
-      console.log(this.isTyping);
+      ;
     },
     submitText() {
       let text = this.text;
