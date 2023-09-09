@@ -4,15 +4,15 @@ import time
 import psycopg2
 import numpy as np
 from loguru import logger
-from typing import Any, List
 from fastapi import FastAPI, Response, File, UploadFile, Query
 from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from typing import Any, List
 from transformers import AutoTokenizer, AutoModel
 from sklearn.cluster import KMeans,MeanShift,DBSCAN,MiniBatchKMeans,AgglomerativeClustering
 from sklearn.metrics.pairwise import cosine_similarity
-
 
 
 # ml features
@@ -27,7 +27,7 @@ conn = 0
 cur = 0
 
 logger.debug("Waiting for DB service Up...")
-time.sleep(10)
+time.sleep(20)
 
 try:     
     HOST=os.environ.get("DB_HOST")

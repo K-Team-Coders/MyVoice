@@ -2,6 +2,10 @@ import pandas as pd
 
 import re
 import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+
 import pandas as pd
 import numpy as np
 import spacy
