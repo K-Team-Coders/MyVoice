@@ -23,9 +23,9 @@
       </div>
       <div class="flex flex-col pt-2">
         <p class="text-gray-500">Вероятность того что ваш ответ будет:</p>
-        <p class=""><span class="text-green-500 mr-2"> ■</span>Положительным - </p>
-        <p class=""><span class="text-gray-400 mr-2"> ■</span>Нейтральным - </p>
-        <p class=""><span class="text-red-500 mr-2"> ■</span>Отрицательным - </p>
+        <p class=""><span class="text-green-500 mr-2"> ■</span>Положительным - {{ tone.positive }}</p>
+        <p class=""><span class="text-gray-400 mr-2"> ■</span>Нейтральным - {{ tone.neutral }}</p>
+        <p class=""><span class="text-red-500 mr-2"> ■</span>Отрицательным - {{ tone.negative }}</p>
       </div>
     </form>
   </div>
@@ -36,6 +36,7 @@ import debounce from "lodash/debounce";
 export default {
   data() {
     return {
+      tone: {},
       files: "",
       text: "",
       isTyping: false,
@@ -57,7 +58,7 @@ export default {
       setTimeout(() => {if (this.isTyping == false){
         console.log(this.text)
         axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, { usertext: this.text })
-        .then((response) => {console.log(response.data);
+        .then((response) => {this.tone = response.data;
         })
         .catch(function () {
           console.log("Ошибка в обработке");

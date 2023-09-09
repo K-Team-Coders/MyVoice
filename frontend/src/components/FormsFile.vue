@@ -16,14 +16,29 @@
         </button>
       </div>
     </form>
+    <div>
+      <transition-group v-if="is_Error"
+        enter-active-class="transition ease-out duration-100 "
+        enter-from-class="transition opacity-0 scale-95"
+        enter-to-class="transform opacity-100 scale-100"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="transform opacity-100 scale-100"
+        leave-to-class="tranfrom opacity-0 scale-95"
+      >
+        <Alert></Alert>
+      </transition-group>
+    </div>
   </div>
 </template>
 <script>
 import axios from "axios";
-import debounce from "lodash/debounce";
+import Alert from "@/components/Alert.vue"
+
 export default {
+  components: {Alert},
   data() {
     return {
+      is_Error: false,
       IP: process.env.VUE_APP_USER_IP_WITH_PORT,
       files: "",
       text: "",
@@ -57,8 +72,7 @@ export default {
         .catch(function (response) {
           console.log("FAILURE!!");
           if (response.statusCode !== 400) {
-            alert('Долбоеб, загрузи другой файл')
-            ;
+            this.is_Error = true;
           }
         });
        

@@ -1,5 +1,5 @@
 <template>
-  <body >
+  <body>
     <Header2></Header2>
     <div class="bg-idealblack">
       <p class="text-whitesmoke text-3xl text-center font-semibold pt-8">
@@ -14,6 +14,7 @@
         </div>
       </div>
     </div>
+    
     <Footer></Footer>
   </body>
 </template>
@@ -23,6 +24,7 @@ import Header2 from "@/components/Header2.vue";
 import Forms from "@/components/Forms.vue";
 import TagCloud from "@/components/TagCloud.vue";
 import Footer from "@/components/Footer.vue";
+
 export default {
   components: {
     Header2,
