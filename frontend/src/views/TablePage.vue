@@ -6,7 +6,7 @@
       <div class="flex justify-center">
         <Forms></Forms>
       </div>
-      <div class="px-40">
+      <div class="flex justify-center">
         <TagCloud></TagCloud>
       </div>
     </div>

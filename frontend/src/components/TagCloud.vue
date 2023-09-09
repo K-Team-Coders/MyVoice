@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <span class="Sphere"></span>
+    <span class="Sphere cursor-pointer"></span>
   </div>
 </template>
 
@@ -100,15 +100,14 @@ export default {
 /* Applying CSS to sphere */
 .tagcloud {
   display: inline-block;
-  left: 30%;
   font-weight: bold;
   letter-spacing: 1px;
   font-family: "Roboto", italic;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 /* Change color of each text in sphere on hover   */
 .tagcloud--item:hover {
-  color: #1f6;
+  color: rgb(255, 255, 255);
 }
 </style>
