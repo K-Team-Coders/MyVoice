@@ -12,7 +12,8 @@
           weight > 4 ? '#00cf00' : weight > 1 ? 'red' : 'whitesmoke'
       "
       font-family="Geologica"
-    />
+    >
+  </vue-word-cloud>
   </div>
 </template>
 
