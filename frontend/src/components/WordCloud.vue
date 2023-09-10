@@ -9,7 +9,7 @@
       :spacing = 0.2
       :color="
         ([, weight]) =>
-          weight > 20 ? '#00cf00' : weight > 10 ? 'red' : 'whitesmoke'
+          weight > 4 ? '#00cf00' : weight > 1 ? 'red' : 'whitesmoke'
       "
       font-family="Geologica"
     />
