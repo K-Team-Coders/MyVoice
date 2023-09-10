@@ -17,7 +17,7 @@
               type="submit"
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none h-12 focus:ring-blue-300 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
             >
-              Экспорт результатов
+              Экспорт результатов .json
             </button>
           </div>
         </div>
