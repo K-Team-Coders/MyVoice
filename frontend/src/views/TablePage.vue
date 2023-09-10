@@ -13,7 +13,7 @@
           <Forms></Forms>
         </div>
         <div>
-          <TableMetrics />
+          <TableMetrics :metrics="result.metrics"/>
         </div>
         <div class="flex justify-center pt-3">
           <TagCloud :result="result"></TagCloud>

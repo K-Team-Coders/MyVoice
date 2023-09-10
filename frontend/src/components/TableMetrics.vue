@@ -5,26 +5,56 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th
-              v-for="item in 10"
+              
               scope="col"
               class="px-6 py-3 whitespace-nowrap"
             >
-              Product name
+            Silhoute
+            </th>
+            <th
+              
+              scope="col"
+              class="px-6 py-3 whitespace-nowrap"
+            >
+            Inertial
             </th>
           </tr>
         </thead>
         <tbody>
           <tr class="bg-whitesmoke border-b hover:bg-gray-200">
             <th
-              v-for="item in 10"
+             
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
             >
-              17"
+              {{ metrics.silhoute_all }}
             </th>
+            <th
+             
+             scope="row"
+             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+           >
+           {{ metrics.inertial_all }}
+           </th>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </template>
+
+<script>
+
+export default{
+  props:{
+    metrics: Object
+  },
+  mounted(){
+    console.log(this.metrics)
+  }
+}
+</script>
+
+<style>
+
+</style>
