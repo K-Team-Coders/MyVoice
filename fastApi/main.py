@@ -27,6 +27,7 @@ from ml.transform import translate_with_en # Keyboard errors
 from ml.result import translate_with_en as pure_text
 from ml.services import get_text, get_bert_embeddings, get_text
 from ml.metrics import  mbkmeans_clusters, censor_text
+
 # Initial code
 # Database connection setup
 
@@ -65,7 +66,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
 censored_words = 0
-with open("words.txt", "r", encoding="utf-8") as file:
+with open("ml/words.txt", "r", encoding="utf-8") as file:
     censored_words = [line.strip() for line in file]
 
 
@@ -240,7 +241,13 @@ def tabledetailview(id_: str):
                 }
             )
         
+        mestrics = {
+            "silhoute_all": str(metrics["silhoute_all"]),
+            "inertial_all": str(metrics["Inertia_all"]),
+        }
+
         result = {
+            "metrics": metrics,
             "headQuestion": headQuestion,
             "totalPositive": totalPositive,
             "totalNeutral": totalNeutral,
@@ -259,14 +266,14 @@ class Answer(BaseModel):
 def answerProcessing(item: Answer):
     logger.debug(f"Answer is --- {item.usertext}")
 
-    t9_correction = pure_text(item.usertext)
+    t9_correction = censor_text(pure_text(item.usertext), censored_words)
     scores = tone(remove_emoji(item.usertext))
 
     result = {
         "positive": scores['pos'],
         "neutral": scores['neu'],
         "negative": scores['neg'],
-        "t9": t9_correction["t9_corretion"]
+        "t9": t9_correction
     }
 
     logger.success(result)
@@ -350,7 +357,7 @@ def filesProcessing(file: UploadFile = File(...)):
             positive = scores['pos']
             neutral =  scores['neu']
             negative = scores['neg']
-            t9_text = pure_text
+            t9_text = pured
             
             try:
             # Add individual answer to new table
