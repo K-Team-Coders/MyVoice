@@ -215,7 +215,9 @@ def export(id_ : str):
         "id": id_,
         "answers": answers,
     }
-
+    
+    logger.success(result)
+    
     with open(f"jsoned_{id_}.json", "w") as f:
         f.write(json.dumps(result, indent=4))
 
