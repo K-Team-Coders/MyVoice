@@ -23,7 +23,7 @@ export default {
   components: { Header, Footer, FormsFile, QuestionBlog },
   data(){
     return{
-      question_list: [{id: 1, text: 'Какой у вас размер члена?'}, {id: 2, text: 'Какой у вас размер груди?'}, {id: 3, text: 'Какой рост у Артема?'}]
+      question_list: []
     }
   },
   mounted(){
