@@ -110,12 +110,13 @@ export default {
     submitText() {
       let text = this.text;
       axios
-        .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/answer/`, {
-          usertext: text,
+        .post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/processsentence/`, {
+          sentense: text,
+          id: this.$route.params.id
         })
-        .then((response) => console.log(response.data))
+        .then(() =>  this.$forceUpdate())
         .catch(function () {
-          console.log("Ошибка в отправке файла");
+          console.log("Ошибка в отправке предложения");
         });
     },
   },

@@ -1,5 +1,5 @@
 <template>
-    <Bar :chart-data="chartData" :chart-options="chartOptions" />
+  <Bar :chart-data="chartData" :chart-options="chartOptions" />
 </template>
 
 <script>
@@ -9,37 +9,56 @@ import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, Li
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
+  props: {
+    dataset: Object
+  },
   name: 'BarChart',
   components: { Bar },
+  mounted() {
+    console.log(this.dataset)
+    let name_set = []
+    let pos_set = []
+    let neu_set = []
+    let neg_set = []
+    this.dataset.forEach(element => {
+    name_set.push(element.cluster_name),
+    pos_set.push( element.numPositive),
+    neu_set.push( element.numNeutral),
+    neg_set.push( element.numNegative)
+    });
+    this.chartData.labels = name_set
+    this.chartData.datasets[0].data = pos_set
+    this.chartData.datasets[1].data = neu_set
+    this.chartData.datasets[2].data = neg_set
+  },
   data() {
     return {
+      name_set: [],
+      pos_set: [],
+      neu_set: [],
+      neg_set: [],
       chartData: {
-        labels:  [
-      "Антифашистский",
-      "Казать",
-      "Каркас",
-      "Клуша",
-      "Критика",
-      "Отсвечивать",
-      "Пробрить",
-      "Тем",
-    ],
-    
+        labels: [],
+
         datasets: [
           {
             label: 'Положительных',
             backgroundColor: '#00cf00',
-            data: [1, 21, 42, 21, 43, 1,8, 12, 42],
-           
+            data: [],
+
           },
-          {label: 'Нейтральных',
+          {
+            label: 'Нейтральных',
             backgroundColor: '#D0D0D0',
-            data: [40, 20, 12, 21, 54, 12,5, 54, 123]},
-            {label: 'Негативных',
+            data: []
+          },
+          {
+            label: 'Негативных',
             backgroundColor: 'red',
-            data: [100, 24, 65, 23, 87, 23,55, 88, 1]}
+            data: []
+          }
         ]
-      }  ,
+      },
       chartOptions: {
         stacked: true
       }

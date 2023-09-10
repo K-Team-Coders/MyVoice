@@ -28,7 +28,13 @@ export default {
     wordcolors: Object
   },
   mounted(){
-    console.log(this.wordcolors)
+   
+    // let text_color_list = []
+    // let unit_answer = []
+    // wordcolors.forEach(element => {
+      
+      
+    // });
   }
 };
 </script>

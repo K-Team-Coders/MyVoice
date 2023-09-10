@@ -65,7 +65,7 @@ export default {
   
 
   mounted(){
-    console.log(this.dataset)
+  
   },
   data() {
     return {

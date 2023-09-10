@@ -46,10 +46,10 @@ export default {
   
   created(){
     this.isLoading = true
-    console.log()
+    
   axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/tabledetailview/${this.$route.params.id}/`)
   .then((res) => {
-        console.log(this.result)
+        
 				this.result = res.data.result
 			}
   )

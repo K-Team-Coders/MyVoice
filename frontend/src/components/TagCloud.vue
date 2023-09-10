@@ -2,7 +2,7 @@
   <div class="backbody flex flex-col rounded-2xl w-full justify-center">
     <div class="xl:flex flex-row sm:px-40 px-4 gap-4 justify-center">
       <div class="bg-whitesmoke rounded-xl p-4 sm:max-w-[450px] w-full mx-auto">
-        <BarChart />
+        <BarChart :dataset="result.clusters" />
       </div>
       <div class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-[450px] sm:mx-auto">
         <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
@@ -53,17 +53,17 @@ export default {
     },
     getClustersName() {
       const cluster_list = []
-      console.log(this.result)
+      
       this.result.clusters.forEach((element) => cluster_list.push(element.cluster_name));
-      console.log(cluster_list)
+  
       return cluster_list
     }
   },
 
   mounted() {
-    console.log(this.result)
+   
     const Texts = this.getClustersName()
-    console.log(Texts)
+    
     let tagCloud = TagCloud(".Sphere", Texts, {
 
       radius: 230,
