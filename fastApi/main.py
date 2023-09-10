@@ -100,6 +100,110 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.post("/export/{id_}")
+def export(id_ : str):
+    tables = getTables()
+    # Identity check
+    question = 0
+    logger.debug(tables)
+    identity_checker = False
+    for index, data in enumerate(tables):
+        if data['table_id'] == id_ :
+            identity_checker = True
+            question = data['table_head_question']
+        else:
+            pass
+
+    if not identity_checker:
+        return Response(status_code=400)
+    else:
+        try:
+            cur.execute(f""" SELECT * FROM "%s" """, (int(id_),))
+            data = cur.fetchall()
+        except:
+            conn.rollback()
+            return Response(status_code=404)
+    
+        countsData = []
+        clustarisationData = []
+        positiveData = []
+        neutralData = []
+        negativeData = []
+        t9Data = []
+        rawAnswers = []
+        for index, subdata in enumerate(data):
+            logger.debug(subdata[0]) # answer
+            logger.debug(subdata[1]) # count
+            logger.debug(subdata[2]) # positive
+            logger.debug(subdata[3]) # neutral
+            logger.debug(subdata[4]) # negative
+            logger.debug(subdata[5]) # t9
+
+            clustarisationData.append(get_text(subdata[0]))
+            rawAnswers.append(subdata[0])
+            countsData.append(subdata[1])
+            positiveData.append(subdata[2])
+            neutralData.append(subdata[3])
+            negativeData.append(subdata[4])
+            t9Data.append(subdata[5])
+        
+        clustersData, metrics = Clustarisation(clustarisationData)
+        logger.debug(metrics)
+        logger.debug(clustersData)
+
+        answers = []
+        clusters_names = []
+        for clusterName in clustersData:
+            wordsInCluster = clustersData[clusterName]
+                        
+            maximum = 0
+            maximumName = 'none'
+
+            for wordInCluster in wordsInCluster:
+                commonIndex = clustarisationData.index(wordInCluster)
+
+                # gaining common data
+                wordInClusterRaw = rawAnswers[commonIndex]
+                wordInClusterCount = countsData[commonIndex]
+
+                # naming costyl 
+                if maximum < wordInClusterCount:
+                    maximum = wordInClusterCount
+                    maximumName = wordInClusterRaw
+
+            clusters_names.append(maximumName)
+
+        for clusterName in clustersData:
+            wordsInCluster = clustersData[clusterName]
+
+            for word in wordsInCluster:
+                commonIndex = clustarisationData.index(wordInCluster)
+
+                # gaining common data
+                wordInClusterRaw = rawAnswers[commonIndex]
+                wordInClusterCount = countsData[commonIndex]
+                wordSentity = 0
+
+                if neutralData[commonIndex] > abs(negativeData[commonIndex]) and neutralData[commonIndex] > positiveData[commonIndex]:
+                    wordSentity = 'neutral'
+                elif positiveData[commonIndex] > neutralData[commonIndex] and positiveData[commonIndex] > negativeData[commonIndex]:
+                    wordSentity = 'positive'
+                elif abs(negativeData[commonIndex]) >  
+    # {
+    #     "question": "vopros",
+    #     "id": id,
+    #     "answers": 
+    #       [
+                # {
+                #     "answer": Answer,
+                #     "count": count,
+                #     "cluster": cluster,
+                #     "sentiment": neutals, positive, negative
+                #     "userErrors": errors fix
+                # }
+    #      ]
+    # }
+
 # Tables list output with question for FRONTEND
 @app.get("/tableslist")
 def tableslist():
@@ -120,7 +224,7 @@ def processsentence(sentence: str, id_: str):
         else:
             pass
 
-    if identity_checker:
+    if not identity_checker:
         return Response(status_code=400)
     else:
         try:
