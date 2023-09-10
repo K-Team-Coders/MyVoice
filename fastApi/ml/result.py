@@ -18,16 +18,15 @@ def remove_emoji(string):
 
 def t9(text):
     spell = SpellChecker(language='ru')
-    text_split = text.split()
+    word = text
     cor = ""
     try:
-        for word in text_split:
-            if spell.correction(str(word)) == str(word):
-                cor += str(word)+' '
-            else:
-                cor += spell.correction(str(word))+' '
+        if spell.correction(str(word)) == str(word):
+            cor += str(word)
+        else:
+            cor += spell.correction(str(word))
     except TypeError:
-        cor = text_split
+        cor = word
     return cor
 
 
@@ -62,11 +61,11 @@ def translate_with_en(txt):
     web2lowerset = get_english_words_set(['web2'], lower=True)
     while i in range(lenn):
         if txt[i].lower()[0] in list("ё1234567890-=йцукенгшщзхъфывапролджэячсмитьбю"):
-            text += t9(remove_emoji(txt[i]))
+            text += t9(txt[i])+" "
         else:
-            if txt[i].lower() in web2lowerset:
-                text+=remove_emoji(txt[i])
+            if txt[i].lower() in web2lowerset or txt[i].lower() in ['iphone', 'bmw']:
+                text+=txt[i]+" "
             else:
-                text+=translate_txt(remove_emoji(txt[i]))+" "
+                text+=translate_txt(txt[i])+" "
         i+=1
     return text
