@@ -3,24 +3,19 @@
     <Header2></Header2>
     <LoadingPage v-if="isLoading" />
     <div v-else class="bg-idealblack">
-      <p
-        class="text-whitesmoke 2xl:text-3xl text-lg text-center font-semibold pt-8"
-      >
+      <p class="text-whitesmoke 2xl:text-3xl text-lg text-center font-semibold pt-8">
         {{ result.headQuestion }}
       </p>
       <div class="py-10">
         <div class="flex justify-center">
           <Forms></Forms>
-          <button
-          @click="DownloadFile()"
-          type="submit"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none h-24 focus:ring-blue-300 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-3"
-        >
-          Экспорт результатов
-        </button>
+          <button @click="DownloadFile()" type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none h-24 focus:ring-blue-300 font-semibold rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-3">
+            Экспорт результатов
+          </button>
         </div>
         <div>
-          <TableMetrics :metrics="result.metrics"/>
+          <TableMetrics :metrics="result.metrics" />
         </div>
         <div class="flex justify-center pt-3">
           <TagCloud :result="result"></TagCloud>
@@ -56,10 +51,10 @@ export default {
       isLoading: false,
     };
   },
-  methods:{
-    DownloadFile(){
+  methods: {
+    DownloadFile() {
       axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/export/${this.$route.params.id}/`)
-      .then(response => {
+        .then(response => {
           const link = document.createElement('a')
           link.href = window.URL.createObjectURL(new Blob([response.data]));
           link.setAttribute(
@@ -68,21 +63,21 @@ export default {
           )
           document.body.appendChild(link);
           link.click()
-        })}
+        })
     }
   },
-  created(){
-    this.isLoading = true
-    
+created(){
+  this.isLoading = true
+
   axios.post(`http://${process.env.VUE_APP_USER_IP_WITH_PORT}/tabledetailview/${this.$route.params.id}/`)
-  .then((res) => {
-        
-				this.result = res.data.result
-			}
-  )
-  .finally(() => {
-				this.isLoading = false;
-			})
+    .then((res) => {
+
+      this.result = res.data.result
+    }
+    )
+    .finally(() => {
+      this.isLoading = false;
+    })
 }}
 </script>
 
