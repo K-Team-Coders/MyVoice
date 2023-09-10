@@ -123,8 +123,12 @@ def processsentence(sentence: str, id_: str):
     if identity_checker:
         return Response(status_code=400)
     else:
-        cur.execute(f""" SELECT * FROM "%s" """, (int(id_),))
-        data = cur.fetchall()
+        try:
+            cur.execute(f""" SELECT * FROM "%s" """, (int(id_),))
+            data = cur.fetchall()
+        except:
+            conn.rollback()
+            return Response(status_code=404)
 
         countsData = []
         rawAnswers = []
@@ -163,7 +167,7 @@ def processsentence(sentence: str, id_: str):
                             (answer, count, positive, neutral, negative, t9)
                         VALUES
                             (%s, %s, %s, %s, %s, %s)
-                        """, (id_, sentence, counts, positive, neutral, negative, t9_text))
+                        """, (int(id_), sentence, counts, positive, neutral, negative, t9_text))
             conn.commit()
             # Я должен вернуть ему список всех айди и вопросов
             return JSONResponse(content=getTables(), status_code=201)
@@ -173,7 +177,7 @@ def processsentence(sentence: str, id_: str):
                         UPDATE "%s" 
                         SET "count" = %s
                         WHERE "answer" = %s
-                        """, (id_, counts+1, sentence)) 
+                        """, (int(id_), counts+1, sentence)) 
             conn.commit()
             return JSONResponse(content=getTables(), status_code=202)
 
