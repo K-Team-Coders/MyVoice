@@ -24,7 +24,7 @@ from ml.emoji import remove_emoji
 from ml.tone import tone
 from ml.t9 import t9
 from ml.transform import translate_with_en
-from ml.services import get_text, get_bert_embeddings
+from ml.services import get_text, get_bert_embeddings, get_text
 
 # Initial code
 # Database connection setup
@@ -104,22 +104,145 @@ def tabledetailview(id_: str):
     tables = getTables()
     
     # Check for identity of tables
+    headQuestion = 0
     identitity_checker = False
     for index, data in enumerate(tables):
         logger.debug(data["table_id"])
         if str(data["table_id"]) == id_:  
             identitity_checker = True
+            headQuestion = data["table_head_question"]
 
     # Take data from files loading into DB
     if identitity_checker:
-        cur.execute(f""" SELECT * FROM "%s" """, (id_,))
+        cur.execute(f""" SELECT * FROM "%s" """, (int(id_),))
         data = cur.fetchall()
 
+        countsData = []
+        clustarisationData = []
+        positiveData = []
+        neutralData = []
+        negativeData = []
+        t9Data = []
         for index, subdata in enumerate(data):
-            logger.debug(subdata)
-            
+            logger.debug(subdata[0]) # answer
+            logger.debug(subdata[1]) # count
+            logger.debug(subdata[2]) # positive
+            logger.debug(subdata[3]) # neutral
+            logger.debug(subdata[4]) # negative
+            logger.debug(subdata[5]) # t9
 
-    return JSONResponse({'nothing': 'nothing'})
+            clustarisationData.append(get_text(subdata[0]))
+            countsData.append(subdata[1])
+            positiveData.append(subdata[2])
+            neutralData.append(subdata[3])
+            negativeData.append(subdata[4])
+            t9Data.append(subdata[5])
+        
+        clustersData = Clustarisation(clustarisationData)
+        logger.debug(clustersData)
+
+        # Отпраляю лист диктов в нем кластеры {
+        #   totalPositive: countPositive,
+        #   totalNegative: countNegaive,
+        #   totalNeutral: countNeutral,
+        #   clusters: 
+        #   [
+        #       {
+        #           "cluster_name": "наиболее популярный",
+        #           "tagCloud": [["text": count], ["text2": count2], ["text3": count3]]
+        #           "numNegative": countNegative,
+        #           "numPositive": countPositive,
+        #           "numNeutral": countNeutral,
+        #           "wordsSentiment": 
+        #           [
+        #               {
+        #                   "answer": data,
+        #                   "pos": 1,
+        #                   "neu": 0,
+        #                   "neg": 1
+        #               }
+        #           ]
+        #       }
+        #   ]
+        # } 
+
+        result = {}
+
+        totalPositive = 0
+        totalNeutral = 0
+        totalNegative = 0
+
+        clusters = []
+        for clusterName in clustersData:
+            wordsInCluster = clustersData[clusterName]
+            
+            # Defining data to frontender
+            wordsSentiment = []
+            tagCloud = []
+
+            numPositive = 0
+            numNeutral = 0
+            numNegative = 0
+            
+            maximum = 0
+            maximumName = 'none'
+
+            for wordInCluster in wordsInCluster:
+                commonIndex = clustarisationData.index(wordInCluster)
+
+                # gaining common data
+                wordInClusterCount = countsData[commonIndex]
+                wordInClusterPositive = positiveData[commonIndex]
+                wordInClusterNeutral = neutralData[commonIndex]
+                wordInClusterNegative = negativeData[commonIndex]
+
+                # naming costyl 
+                if maximum < wordInClusterCount:
+                    maximum = wordInClusterCount
+                    maximumName = wordInCluster
+
+                # sentiment analysis
+                if wordInClusterPositive > abs(wordInClusterNegative) and wordInClusterPositive > wordInClusterNeutral:
+                    totalPositive += 1
+                    numPositive += 1
+                elif abs(wordInClusterNegative) > wordInClusterPositive and abs(wordInClusterNegative) > wordInClusterNeutral:
+                    totalNegative += 1
+                    numNegative += 1
+                elif wordInClusterNeutral > wordInClusterPositive and wordInClusterNeutral > abs(wordInClusterNegative):
+                    totalNeutral += 1
+                    numNeutral += 1
+
+                # data gathering for tag cloud
+                tagCloud.append([f"{wordInCluster}", wordInClusterCount])
+                
+                # words sentiments in scope
+                wordsSentiment.append({
+                    "answer": wordInCluster,
+                    "positive": wordInClusterPositive,
+                    "neutral": wordInClusterNeutral,
+                    "negative": wordInClusterNegative
+                })
+            
+            clusters.append(
+                {
+                    "cluster_name": maximumName,
+                    "tagCloud": tagCloud,
+                    "numPositive": numPositive,
+                    "numNeutral": numNeutral,
+                    "numNegative": numNegative,
+                    "wordsSentiment": wordsSentiment
+                }
+            )
+        
+        result = {
+            "headQuestion": headQuestion,
+            "totalPositive": totalPositive,
+            "totalNeutral": totalNeutral,
+            "totalNegative": totalNegative,
+            "clusters": clusters
+        }
+            
+    return JSONResponse({'result': result})
 
 # Answer model for POST
 class Answer(BaseModel):
@@ -213,6 +336,7 @@ def filesProcessing(file: UploadFile = File(...)):
 
             logger.debug(count[subanswer])
             logger.debug(subanswer)
+
             counts = count[subanswer]
             
             # Обработка на момент эмоджи 
@@ -235,7 +359,7 @@ def filesProcessing(file: UploadFile = File(...)):
                                 (answer, count, positive, neutral, negative, t9)
                             VALUES
                                 (%s, %s, %s, %s, %s, %s)
-                            """, (id_, answer, counts, positive, neutral, negative, t9_text))
+                            """, (id_, subanswer, counts, positive, neutral, negative, t9_text))
                 conn.commit()
             except psycopg2.errors.UniqueViolation:
                 conn.rollback()
@@ -243,16 +367,13 @@ def filesProcessing(file: UploadFile = File(...)):
                             UPDATE "%s" 
                             SET "count" = %s
                             WHERE "answer" = %s
-                            """, (id_, counts+1, answer)) 
+                            """, (id_, counts+1, subanswer)) 
                 conn.commit()
 
     # Я должен вернуть ему список всех айди и вопросов
     return JSONResponse(content=getTables(), status_code=201)
 
-# Clusterisation
-@app.post("/clusters")
-def get_s_text(text: List[str] = Query(None)):
-
+def Clustarisation(text):
     res=[]
     # bac_req={}
     for i in range(0,len(text)):
@@ -287,5 +408,10 @@ def get_s_text(text: List[str] = Query(None)):
     for cluster_id in np.unique(cluster_labels):
         cluster_docs = np.array(res)[cluster_labels == cluster_id]
         clusters[f"Кластер {cluster_id}"] = cluster_docs.tolist()
-
+    
     return clusters
+
+# Clusterisation
+@app.post("/clusters")
+def get_s_text(text: List[str] = Query(None)):
+    return Clustarisation(text)
