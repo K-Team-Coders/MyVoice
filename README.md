@@ -118,4 +118,4 @@ FastAPI, VueJS, PostgreSQL, Docker (docker-compose), transformers, torch, spacy,
 ### Screencast
 Если вам интересно посмотреть демонстрацию работы сервиса - предлагаю ознакомиться с записью ниже,
 
-*https://disk.yandex.ru/d/GCF-M9KGPJBdmQ*
+*https://disk.yandex.ru/i/kfvFjvoOZgTg2g*
