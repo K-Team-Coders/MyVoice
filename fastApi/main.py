@@ -109,9 +109,13 @@ def export(id_ : str):
     logger.debug(tables)
     identity_checker = False
     for index, data in enumerate(tables):
-        if data['table_id'] == id_ :
+        if data['table_id'] == int(id_) :
             identity_checker = True
             question = data['table_head_question']
+
+            logger.success(id_)
+            logger.success(question)
+
         else:
             pass
 
@@ -212,7 +216,7 @@ def export(id_ : str):
         "answers": answers,
     }
 
-    with open(f"jsoned_{id_}.json", "wb") as f:
+    with open(f"jsoned_{id_}.json", "w") as f:
         f.write(json.dumps(result, indent=4))
 
     return FileResponse(f"jsoned_{id_}.json")
