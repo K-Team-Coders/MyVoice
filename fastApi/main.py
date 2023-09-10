@@ -11,6 +11,7 @@ from loguru import logger
 from fastapi import FastAPI, Response, File, UploadFile, Query
 from fastapi.responses import JSONResponse  
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
 from pydantic import BaseModel
 
 from typing import Any, List
@@ -173,6 +174,7 @@ def export(id_ : str):
 
             clusters_names.append(maximumName)
 
+        clusterIndex = 0
         for clusterName in clustersData:
             wordsInCluster = clustersData[clusterName]
 
@@ -182,27 +184,39 @@ def export(id_ : str):
                 # gaining common data
                 wordInClusterRaw = rawAnswers[commonIndex]
                 wordInClusterCount = countsData[commonIndex]
+                wordErrors = t9Data[commonIndex]
                 wordSentity = 0
 
                 if neutralData[commonIndex] > abs(negativeData[commonIndex]) and neutralData[commonIndex] > positiveData[commonIndex]:
                     wordSentity = 'neutral'
                 elif positiveData[commonIndex] > neutralData[commonIndex] and positiveData[commonIndex] > negativeData[commonIndex]:
                     wordSentity = 'positive'
-                elif abs(negativeData[commonIndex]) >  
-    # {
-    #     "question": "vopros",
-    #     "id": id,
-    #     "answers": 
-    #       [
-                # {
-                #     "answer": Answer,
-                #     "count": count,
-                #     "cluster": cluster,
-                #     "sentiment": neutals, positive, negative
-                #     "userErrors": errors fix
-                # }
-    #      ]
-    # }
+                elif abs(negativeData[commonIndex]) > neutralData[commonIndex] and abs(negativeData[commonIndex]) > positiveData[commonIndex]:
+                    wordSentity = 'negative'
+
+                answers.append(
+                    {
+                        "answer": wordInClusterRaw,
+                        "count": wordInClusterCount,
+                        "cluster": clusters_names[clusterIndex],
+                        "sentiment": wordSentity,
+                        "userErrorsFixes": wordErrors
+                    }
+                )
+
+        clusterIndex += 1
+
+    result = {
+        "question": question,
+        "id": id_,
+        "answers": answers,
+    }
+
+    with open(f"jsoned_{id_}.json", "wb") as f:
+        f.write(json.dumps(result, indent=4))
+
+    return FileResponse(f"jsoned_{id_}.json")
+
 
 # Tables list output with question for FRONTEND
 @app.get("/tableslist")
