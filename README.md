@@ -1,4 +1,4 @@
-# MyVoice.![Лого CRAWLER](/uav.png)
+# MyVoice.!
 
 ### *Доброго времени суток!*
 
