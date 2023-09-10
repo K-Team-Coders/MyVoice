@@ -32,6 +32,7 @@ export default {
     Doughnut,
   },
   props: {
+    dataset: Array,
     chartId: {
       type: String,
       default: "doughnut-chart",
@@ -61,6 +62,11 @@ export default {
       default: () => [],
     },
   },
+  
+
+  mounted(){
+    console.log(this.dataset)
+  },
   data() {
     return {
       chartData: {
@@ -68,7 +74,7 @@ export default {
         datasets: [
           {
             backgroundColor: ["#00FF00", "#D0D0D0", "#BD2426"],
-            data: [50, 30, 10],
+            data: this.dataset,
           },
         ],
       },

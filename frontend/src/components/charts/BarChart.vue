@@ -27,7 +27,7 @@ export default {
     
         datasets: [
           {
-            label: 'Положительны',
+            label: 'Положительных',
             backgroundColor: '#00cf00',
             data: [1, 21, 42, 21, 43, 1,8, 12, 42],
            

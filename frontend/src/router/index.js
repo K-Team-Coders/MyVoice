@@ -13,7 +13,21 @@ const routes = [
     name: "answer",
 
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/TablePage.vue"),
+      import("../views/TablePage.vue"),
+  },
+  {
+    path: "/answer/:id",
+    name: "DetailTable",
+    component: () =>
+    import("../views/TablePage.vue"),
+    props: true
+  },
+  {
+    path: "/notfound",
+    name: "NotFound",
+    component: () =>
+    import( "../components/PageNotFound.vue"),
+    props: true
   },
 ];
 

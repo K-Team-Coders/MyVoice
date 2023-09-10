@@ -1,27 +1,21 @@
 <template>
   <div class="backbody flex flex-col rounded-2xl w-full justify-center">
     <div class="xl:flex flex-row sm:px-40 px-4 gap-4 justify-center">
-      <div
-        class="bg-whitesmoke rounded-xl p-4 sm:max-w-[450px] w-full mx-auto"
-      >
+      <div class="bg-whitesmoke rounded-xl p-4 sm:max-w-[450px] w-full mx-auto">
         <BarChart />
       </div>
-      <div
-        class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-[450px] sm:mx-auto"
-      >
+      <div class="sm:bg-whitesmoke flex justify-center rounded-xl p-4 lg:max-w-2xl sm:max-w-[450px] sm:mx-auto">
         <span ref="tagcloud--item" class="Sphere cursor-pointer"></span>
       </div>
-      <div
-        class="bg-whitesmoke rounded-xl sm:p-4 p-10 lg:max-w-2xl sm:mx-auto  sm:max-w-[450px]"
-      >
-        <Doughnut></Doughnut>
+      <div class="bg-whitesmoke rounded-xl sm:p-4 p-10 lg:max-w-2xl sm:mx-auto  sm:max-w-[450px]">
+        <Doughnut :dataset="[result.totalPositive, result.totalNeutral, result.totalNegative]"></Doughnut>
       </div>
     </div>
     <div v-if="isOpened" class="flex flex-col pt-10 px-6 justify-center text-center">
       <p class="bg-idealblack text-whitesmoke font-bold sm:text-3xl">
         Кластер: {{ texts }}
       </p>
-      <WordCloud />
+      <WordCloud :wordcolors="this.text_colors" :words="this.text_list" />
     </div>
   </div>
 </template>
@@ -38,49 +32,57 @@ export default {
     return {
       texts: "nothing",
       isOpened: false,
+      text_colors: [],
+      text_list: []
     };
+  },
+
+  props: {
+    result: Object
   },
   methods: {
     onClick(e) {
       this.isOpened = true;
       if (e.target.className === "tagcloud--item") {
         this.texts = e.target.innerText;
-        console.log(this.texts);
+      let id = this.getClustersName().indexOf(this.texts)
+      this.text_list =  this.result.clusters[id].tagCloud
+      this.text_colors =  this.result.clusters[id].wordsSentiment
+
       }
     },
+    getClustersName() {
+      const cluster_list = []
+      console.log(this.result)
+      this.result.clusters.forEach((element) => cluster_list.push(element.cluster_name));
+      console.log(cluster_list)
+      return cluster_list
+    }
   },
-  mounted() {
-    const Texts = [
-      "Антифашистский",
-      "Казать",
-      "Каркас",
-      "Клуша",
-      "Критика",
-      "Отсвечивать",
-      "Пробрить",
-      "Тем",
-    ];
 
+  mounted() {
+    console.log(this.result)
+    const Texts = this.getClustersName()
+    console.log(Texts)
     let tagCloud = TagCloud(".Sphere", Texts, {
-      // Sphere radius in px
+
       radius: 230,
 
-      // animation speed
-      // slow, normal, fast
+
       maxSpeed: "fast",
       initSpeed: "fast",
 
-      // Rolling direction [0 (top) , 90 (left), 135 (right-bottom)]
+
       direction: 135,
 
-      // interaction with mouse or not [Default true (decelerate to rolling init speed, and keep rolling with mouse).]
+
       keep: true,
     });
 
-    // Giving color to each text in sphere
+
     let color = "#544adde1";
     document.querySelector(".Sphere").style.color = color;
-    // let rootEl = this.$el.querySelector(".tagcloud");
+
     let element = this.$refs["tagcloud--item"];
     element.addEventListener("click", this.onClick);
   },
@@ -88,14 +90,13 @@ export default {
 </script>
 
 <style>
-/*     Importing Google fonts    */
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 .backbody {
   background-color: #222;
 }
 
-/* Applying CSS to sphere */
+
 .tagcloud {
   display: inline-block;
   font-weight: bold;
@@ -104,7 +105,7 @@ export default {
   font-size: 20px;
 }
 
-/* Change color of each text in sphere on hover   */
+
 .tagcloud--item:hover {
   color: rgb(153, 32, 32);
 }
