@@ -552,7 +552,7 @@ def Clustarisation(text):
     cosine_matrix = cosine_similarity(text_embeddings)
     #вычисление оптима кластеров
     wcss = {}
-    limit = int((len(text)//2)**0.9)
+    limit = int((len(text)//2))
 
     for k in range(2,limit+1):
         model = KMeans(n_clusters=k)
