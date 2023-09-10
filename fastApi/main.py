@@ -20,12 +20,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # ml features
-from ml.emoji import remove_emoji
-from ml.tone import tone
-from ml.t9 import t9
-from ml.transform import translate_with_en
+from ml.emoji import remove_emoji 
+from ml.tone import tone # Sentiment analysis
+from ml.t9 import t9 # T9 classic
+from ml.transform import translate_with_en # Keyboard errors
+from ml.result import translate_with_en as pure_text
 from ml.services import get_text, get_bert_embeddings, get_text
-
+from ml.metrics import  mbkmeans_clusters, censor_text
 # Initial code
 # Database connection setup
 
@@ -62,6 +63,10 @@ except Exception as e:
 model_name = "bert-base-multilingual-cased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
+
+censored_words = 0
+with open("words.txt", "r", encoding="utf-8") as file:
+    censored_words = [line.strip() for line in file]
 
 
 # Receive actual tables list
@@ -138,7 +143,8 @@ def tabledetailview(id_: str):
             negativeData.append(subdata[4])
             t9Data.append(subdata[5])
         
-        clustersData = Clustarisation(clustarisationData)
+        clustersData, metrics = Clustarisation(clustarisationData)
+        logger.debug(metrics)
         logger.debug(clustersData)
 
         # Отпраляю лист диктов в нем кластеры {
@@ -253,11 +259,8 @@ class Answer(BaseModel):
 def answerProcessing(item: Answer):
     logger.debug(f"Answer is --- {item.usertext}")
 
-    answer = translate_with_en(item.usertext)
-    answer = remove_emoji(item.usertext)
-
-    scores = tone(answer)
-    t9_correction = t9(answer)
+    t9_correction = pure_text(item.usertext)
+    scores = tone(remove_emoji(item.usertext))
 
     result = {
         "positive": scores['pos'],
@@ -320,11 +323,9 @@ def filesProcessing(file: UploadFile = File(...)):
             logger.debug(subdata)
 
             answer = subdata['answer']
-            # answer = translate_with_en(answer)
+            answer = remove_emoji(answer)
 
             logger.debug(answer)
-
-            answer = remove_emoji(answer) 
             
             logger.debug(answer)
 
@@ -339,18 +340,17 @@ def filesProcessing(file: UploadFile = File(...)):
 
             counts = count[subanswer]
             
-            # Обработка на момент эмоджи 
+            pured = pure_text(subanswer)
             scores = 0
             try:
                 scores = tone(subanswer)
             except:
                 scores = {'pos': 0.0, 'neu': 0.0, 'neg':0.0}
             
-            t9_correction = t9(subanswer)
             positive = scores['pos']
             neutral =  scores['neu']
             negative = scores['neg']
-            t9_text = t9_correction["t9_corretion"]
+            t9_text = pure_text
             
             try:
             # Add individual answer to new table
@@ -377,7 +377,7 @@ def Clustarisation(text):
     res=[]
     # bac_req={}
     for i in range(0,len(text)):
-        res.append(get_text(text[i]))
+        res.append(censor_text(get_text(text[i]),censored_words))
     logger.debug(res)
     text_embeddings = get_bert_embeddings(res)
 
@@ -408,10 +408,13 @@ def Clustarisation(text):
     for cluster_id in np.unique(cluster_labels):
         cluster_docs = np.array(res)[cluster_labels == cluster_id]
         clusters[f"Кластер {cluster_id}"] = cluster_docs.tolist()
-    
-    return clusters
+
+    metrics = mbkmeans_clusters(1-cosine_matrix,max_key)
+    logger.debug(metrics)
+
+    return clusters, metrics
 
 # Clusterisation
 @app.post("/clusters")
 def get_s_text(text: List[str] = Query(None)):
-    return Clustarisation(text)
+    return JSONResponse({"data": Clustarisation(text)})

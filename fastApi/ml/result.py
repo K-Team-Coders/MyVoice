@@ -70,6 +70,3 @@ def translate_with_en(txt):
                 text+=translate_txt(remove_emoji(txt[i]))+" "
         i+=1
     return text
-
-
-print(translate_with_en('самый лучший fyfkbnbr системы ☺'))
