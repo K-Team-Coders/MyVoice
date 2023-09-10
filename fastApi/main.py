@@ -105,6 +105,80 @@ app.add_middleware(
 def tableslist():
     return JSONResponse({"result" : getTables()})
 
+# View for adding new sentence in progress
+@app.post("/processsentence")
+def processsentence(sentence: str, id_: str):
+    tables = getTables()
+    
+    # Identity check
+    logger.debug(tables)
+    
+    identity_checker = False
+    for index, data in enumerate(tables):
+        if data['table_id'] == id_ :
+            identity_checker = True
+        else:
+            pass
+
+    if identity_checker:
+        return Response(status_code=400)
+    else:
+        cur.execute(f""" SELECT * FROM "%s" """, (int(id_),))
+        data = cur.fetchall()
+
+        countsData = []
+        rawAnswers = []
+        for index, subdata in enumerate(data):
+            logger.debug(subdata[0]) # answer
+            logger.debug(subdata[1]) # count
+
+            rawAnswers.append(subdata[0])
+            countsData.append(subdata[1])
+
+
+        newAnswer = pure_text(sentence)
+        scores = 0
+        try:
+            scores = tone(sentence)
+        except:
+            scores = {'pos': 0.0, 'neu': 0.0, 'neg':0.0}
+        
+        positive = scores['pos']
+        neutral =  scores['neu']
+        negative = scores['neg']
+        t9_text = newAnswer
+            
+        counts = 1
+        if newAnswer in rawAnswers: 
+            commonIndex = rawAnswers.index(newAnswer)
+            counts = countsData[commonIndex] 
+        elif sentence in rawAnswers:
+            commonIndex = rawAnswers.index(sentence)
+            counts = countsData[commonIndex] 
+
+        try:
+        # Add individual answer to new table
+            cur.execute("""
+                        INSERT INTO "%s" 
+                            (answer, count, positive, neutral, negative, t9)
+                        VALUES
+                            (%s, %s, %s, %s, %s, %s)
+                        """, (id_, sentence, counts, positive, neutral, negative, t9_text))
+            conn.commit()
+            # Я должен вернуть ему список всех айди и вопросов
+            return JSONResponse(content=getTables(), status_code=201)
+        except psycopg2.errors.UniqueViolation:
+            conn.rollback()
+            cur.execute("""
+                        UPDATE "%s" 
+                        SET "count" = %s
+                        WHERE "answer" = %s
+                        """, (id_, counts+1, sentence)) 
+            conn.commit()
+            return JSONResponse(content=getTables(), status_code=202)
+
+
+# Analisys for table by its id
 @app.post("/tabledetailview/{id_}")
 def tabledetailview(id_: str):
     tables = getTables()
@@ -129,6 +203,7 @@ def tabledetailview(id_: str):
         neutralData = []
         negativeData = []
         t9Data = []
+        rawAnswers = []
         for index, subdata in enumerate(data):
             logger.debug(subdata[0]) # answer
             logger.debug(subdata[1]) # count
@@ -138,6 +213,7 @@ def tabledetailview(id_: str):
             logger.debug(subdata[5]) # t9
 
             clustarisationData.append(get_text(subdata[0]))
+            rawAnswers.append(subdata[0])
             countsData.append(subdata[1])
             positiveData.append(subdata[2])
             neutralData.append(subdata[3])
@@ -147,31 +223,6 @@ def tabledetailview(id_: str):
         clustersData, metrics = Clustarisation(clustarisationData)
         logger.debug(metrics)
         logger.debug(clustersData)
-
-        # Отпраляю лист диктов в нем кластеры {
-        #   totalPositive: countPositive,
-        #   totalNegative: countNegaive,
-        #   totalNeutral: countNeutral,
-        #   clusters: 
-        #   [
-        #       {
-        #           "cluster_name": "наиболее популярный",
-        #           "tagCloud": [["text": count], ["text2": count2], ["text3": count3]]
-        #           "numNegative": countNegative,
-        #           "numPositive": countPositive,
-        #           "numNeutral": countNeutral,
-        #           "wordsSentiment": 
-        #           [
-        #               {
-        #                   "answer": data,
-        #                   "pos": 1,
-        #                   "neu": 0,
-        #                   "neg": 1
-        #               }
-        #           ]
-        #       }
-        #   ]
-        # } 
 
         result = {}
 
@@ -198,6 +249,7 @@ def tabledetailview(id_: str):
                 commonIndex = clustarisationData.index(wordInCluster)
 
                 # gaining common data
+                wordInClusterRaw = rawAnswers[commonIndex]
                 wordInClusterCount = countsData[commonIndex]
                 wordInClusterPositive = positiveData[commonIndex]
                 wordInClusterNeutral = neutralData[commonIndex]
@@ -220,7 +272,7 @@ def tabledetailview(id_: str):
                     numNeutral += 1
 
                 # data gathering for tag cloud
-                tagCloud.append([f"{wordInCluster}", wordInClusterCount])
+                tagCloud.append([f"{wordInClusterRaw}", wordInClusterCount])
                 
                 # words sentiments in scope
                 wordsSentiment.append({
@@ -241,13 +293,13 @@ def tabledetailview(id_: str):
                 }
             )
         
-        mestrics = {
+        result_metrics = {
             "silhoute_all": str(metrics["silhoute_all"]),
             "inertial_all": str(metrics["Inertia_all"]),
         }
 
         result = {
-            "metrics": metrics,
+            "metrics": result_metrics,
             "headQuestion": headQuestion,
             "totalPositive": totalPositive,
             "totalNeutral": totalNeutral,

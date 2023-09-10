@@ -18,6 +18,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem import WordNetLemmatizer
 lst_stopwords = nltk.corpus.stopwords.words('russian')
 lst_stopwords.extend(['…', '«', '»', '...','-','—'])
+lst_stopwords = lst_stopwords[:29]
 nlp = spacy.load('ru_core_news_sm')
 
 from sklearn.cluster import HDBSCAN,AgglomerativeClustering,KMeans
