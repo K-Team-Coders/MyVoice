@@ -564,7 +564,7 @@ def Clustarisation(text):
     # Находим ключ с максимальным дифференциалом
     max_key = max(differences, key=differences.get)
 
-    # Кластеризация с использованием HDBSCAN
+    # Кластеризация с использованием KMeans
     clusterer = KMeans(max_key)
     cluster_labels = clusterer.fit_predict(1 - cosine_matrix)
     logger.debug(int((len(text)//2)**0.8))
