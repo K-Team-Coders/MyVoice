@@ -1,6 +1,5 @@
 <template>
   <div class="p-96">
-
     <div class="preloader" :style="cssVars">
       <span class="rot-1"></span>
       <span class="rot-2"></span>
@@ -13,14 +12,14 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
-  name: 'Preloader',
+  name: "Preloader",
   props: {
     color: {
       type: String,
-      default: 'red',
+      default: "red",
     },
     scale: {
       type: Number,
@@ -30,14 +29,14 @@ export default {
   computed: {
     cssVars() {
       return {
-        '--color': this.color,
-        '--scale': this.scale,
-      }
-    }
-  }
-}
+        "--color": this.color,
+        "--scale": this.scale,
+      };
+    },
+  },
+};
 </script>
-  
+
 <style scoped>
 .preloader {
   position: relative;
@@ -47,7 +46,7 @@ export default {
   transform: scale(var(--scale));
 }
 
-.preloader>span {
+.preloader > span {
   position: absolute;
   background-color: transparent;
   height: 22px;
@@ -111,7 +110,6 @@ export default {
   0% {
     background-color: var(--color);
   }
-
   100% {
     background-color: transparent;
   }

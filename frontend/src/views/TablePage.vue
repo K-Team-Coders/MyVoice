@@ -1,22 +1,26 @@
 <template>
   <body>
-    
     <Header2></Header2>
-    <LoadingPage v-if="isLoading"/>
+    <LoadingPage v-if="isLoading" />
     <div v-else class="bg-idealblack">
-      <p class="text-whitesmoke 2xl:text-3xl text-lg text-center font-semibold pt-8">
+      <p
+        class="text-whitesmoke 2xl:text-3xl text-lg text-center font-semibold pt-8"
+      >
         {{ result.headQuestion }}
       </p>
       <div class="py-10">
         <div class="flex justify-center">
           <Forms></Forms>
         </div>
-        <div class="flex justify-center pt-8">
+        <div>
+          <TableMetrics />
+        </div>
+        <div class="flex justify-center pt-3">
           <TagCloud :result="result"></TagCloud>
         </div>
       </div>
     </div>
-    
+
     <Footer></Footer>
   </body>
 </template>
@@ -27,7 +31,8 @@ import Forms from "@/components/Forms.vue";
 import TagCloud from "@/components/TagCloud.vue";
 import Footer from "@/components/Footer.vue";
 import axios from "axios";
-import LoadingPage from "@/components/LoadingPage.vue"
+import LoadingPage from "@/components/LoadingPage.vue";
+import TableMetrics from "@/components/TableMetrics.vue";
 
 export default {
   components: {
@@ -35,13 +40,14 @@ export default {
     Forms,
     TagCloud,
     Footer,
-    LoadingPage
+    LoadingPage,
+    TableMetrics,
   },
-  data(){
-    return{
+  data() {
+    return {
       result: 0,
-      isLoading: false
-    }
+      isLoading: false,
+    };
   },
   
   created(){
