@@ -242,8 +242,8 @@ def tabledetailview(id_: str):
             )
         
         mestrics = {
-            "silhoute_all": metrics["slhoute_all"],
-            "inertial_all": metrics["Inertia_all"],
+            "silhoute_all": str(metrics["silhoute_all"]),
+            "inertial_all": str(metrics["Inertia_all"]),
         }
 
         result = {
